@@ -12,10 +12,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
-
-import com.example.duanthutap.adapter.ViewPager2Adapter;
 import com.example.duanthutap.databinding.ActivityMainBinding;
-import com.example.duanthutap.effect.DepthPageTransformer;
+
 import com.example.duanthutap.fragment.CartFragment;
 import com.example.duanthutap.fragment.HomeFragment;
 import com.example.duanthutap.fragment.NotificationFragment;
@@ -59,6 +57,6 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit();
-
+        //thu
     }
 }
