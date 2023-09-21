@@ -13,6 +13,9 @@
         android:theme="@style/Theme.DuAnThuTap"
         tools:targetApi="31">
         <activity
+            android:name=".activity.ChiTietSanPhamActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.SignUpActivity"
             android:exported="false" />
         <activity
