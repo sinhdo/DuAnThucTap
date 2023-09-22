@@ -5,5 +5,14 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
+    <style name="TextInputLayoutRoundedEdges" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="shapeAppearanceOverlay">@style/RoundedEdgesShapeAppearance</item>
+    </style>
+
+    <style name="RoundedEdgesShapeAppearance" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+
     <style name="Theme.DuAnThuTap" parent="Base.Theme.DuAnThuTap" />
 </resources>
