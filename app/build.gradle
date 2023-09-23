@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.duanthutap"
-        minSdk 26
+        minSdk 24
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -35,6 +35,8 @@ android {
 dependencies {
     implementation platform('com.google.firebase:firebase-bom:32.3.1')
     implementation 'com.google.firebase:firebase-analytics'
+    implementation "com.google.firebase:firebase-auth:9.0.2"
+    implementation("com.google.firebase:firebase-auth-ktx")
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.5.0'
