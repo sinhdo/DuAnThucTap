@@ -63,8 +63,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         });
             }
         } else if (view.getId() == R.id.tv_goSignIn) {
-            //  Chuyển sang giao diện Sign In (Ko bỏ)
-            //  startActivity(new Intent(SignUpActivity.this, ));
+             startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+             finishAffinity();
         }
     }
 
