@@ -13,6 +13,19 @@
         android:layout_height="120sp"
         android:src="@drawable/img"
         android:layout_marginTop="20sp"/>
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35sp"
+        android:layout_marginEnd="35sp"
+        android:hint="Username"
+        android:textColorHint="#AAA6A6"
+        android:background="#FFFFFF">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/ed_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"

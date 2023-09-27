@@ -13,11 +13,21 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.duanthutap.R;
+
 import com.example.duanthutap.activity.ChatBoxActivity;
 
 
 public class ProfileFragment extends Fragment {
-    Button chatboxbtn;
+    
+
+import com.example.duanthutap.activity.LoginActivity;
+import com.google.firebase.auth.FirebaseAuth;
+
+public class ProfileFragment extends Fragment implements View.OnClickListener {
+    private Button btnLogout;
+    private FirebaseAuth firebaseAuth;
+    private Button chatboxbtn;
+
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -35,21 +45,24 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        chatboxbtn = view.findViewById(R.id.chatboxbtn);
 
-        chatboxbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), ChatBoxActivity.class);
-                startActivity(intent);
-            }
-        });
+        chatboxbtn = view.findViewById(R.id.chatboxbtn);
+        btnLogout = (Button) view.findViewById(R.id.btn_logout);
+        firebaseAuth = FirebaseAuth.getInstance();
+        btnLogout.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.btn_logout){
+            firebaseAuth.signOut();
+            startActivity(new Intent(getActivity(), LoginActivity.class));
+        }
     }
 }
