@@ -13,56 +13,59 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.duanthutap.R;
-
 import com.example.duanthutap.activity.ChatBoxActivity;
+import com.example.duanthutap.activity.LoginActivity;
+import com.google.firebase.auth.FirebaseAuth;
 
 
-public class ProfileFragment extends Fragment {
+
     
 
 import com.example.duanthutap.activity.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class ProfileFragment extends Fragment implements View.OnClickListener {
-    private Button btnLogout;
-    private FirebaseAuth firebaseAuth;
-    private Button chatboxbtn;
+    public class ProfileFragment extends Fragment implements View.OnClickListener {
+        private Button btnLogout,chatboxbtn;
+        private FirebaseAuth firebaseAuth;
 
-    public ProfileFragment() {
-        // Required empty public constructor
-    }
+        public ProfileFragment() {
+            // Required empty public constructor
+        }
 
-    public static ProfileFragment newInstance() {
-        ProfileFragment fragment = new ProfileFragment();
-        return fragment;
-    }
+        public static ProfileFragment newInstance() {
+            ProfileFragment fragment = new ProfileFragment();
+            return fragment;
+        }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+        }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_profile, container, false);
-    }
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.fragment_profile, container, false);
+        }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        @Override
+        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
 
         chatboxbtn = view.findViewById(R.id.chatboxbtn);
-        btnLogout = (Button) view.findViewById(R.id.btn_logout);
-        firebaseAuth = FirebaseAuth.getInstance();
-        btnLogout.setOnClickListener(this);
-    }
+            btnLogout = (Button) view.findViewById(R.id.btn_logout);
+            firebaseAuth = FirebaseAuth.getInstance();
+            btnLogout.setOnClickListener(this);
+            chatboxbtn.setOnClickListener(this);
+        }
 
-    @Override
-    public void onClick(View view) {
-        if (view.getId() == R.id.btn_logout){
-            firebaseAuth.signOut();
-            startActivity(new Intent(getActivity(), LoginActivity.class));
+        @Override
+        public void onClick(View view) {
+            if (view.getId() == R.id.btn_logout) {
+                firebaseAuth.signOut();
+                startActivity(new Intent(getActivity(), LoginActivity.class));
+            }else if (view.getId()==R.id.chatboxbtn){
+                startActivity(new Intent(getActivity(), ChatBoxActivity.class));
+            }
         }
     }
-}
