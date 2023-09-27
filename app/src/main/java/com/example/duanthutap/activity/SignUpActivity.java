@@ -11,19 +11,25 @@ import android.widget.Toast;
 
 import com.example.duanthutap.MainActivity;
 import com.example.duanthutap.R;
+import com.example.duanthutap.database.FirebaseHelper;
 import com.example.duanthutap.databinding.ActivityMainBinding;
 import com.example.duanthutap.databinding.ActivitySignUpBinding;
+import com.example.duanthutap.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
     private ActivitySignUpBinding binding;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private ProgressDialog progressDialog;
+    private FirebaseHelper firebaseHelper = new FirebaseHelper();
+    private DatabaseReference usersRef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,11 +47,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.btn_signUp){
+            String name = binding.edName.getText().toString().trim();
             String email = binding.edEmail.getText().toString().trim();
             String pass = binding.edPass.getText().toString().trim();
             String rePass = binding.edRePass.getText().toString().trim();
 
-            if (checkValidate(email,pass,rePass)){
+            if (checkValidate(name,email,pass,rePass)){
                 progressDialog.show();
                 firebaseAuth.createUserWithEmailAndPassword(email,pass)
                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -53,6 +60,19 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 progressDialog.dismiss();
                                 if (task.isSuccessful()){
+                                    //tao user vao realtime
+                                    firebaseUser = firebaseAuth.getCurrentUser();
+                                    String id = firebaseUser.getUid();
+                                    User user = new User();
+                                    user.setName(name);
+                                    user.setEmail(email);
+                                    user.setPassword(pass);
+                                    user.setId(id);
+                                    user.setPhoneNumber("");
+                                    user.setImg("");
+                                    usersRef = firebaseHelper.getUsersRef();
+                                    usersRef.child(id).setValue(user);
+
                                     Toast.makeText(SignUpActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
                                     startActivity(new Intent(SignUpActivity.this, MainActivity.class));
                                     finishAffinity();
@@ -68,13 +88,20 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    private boolean checkValidate(String email, String pass, String rePass){
+    private boolean checkValidate(String name, String email, String pass, String rePass){
         if (email.isEmpty() || pass.isEmpty()){
             Toast.makeText(this, "Email, Password, RePassword không được để trống!", Toast.LENGTH_SHORT).show();
             return false;
         }
 
         String emailForm = "^[A-Za-z0-9]+[A-Za-z0-9]*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)$";
+        String nameForm1 = "^[a-zA-Z]+$";
+        String nameForm2 = "^[a-zA-Z]+( [a-zA-Z]+)*$";
+        
+        if (!name.matches(nameForm1) || !name.matches(nameForm2)){
+            Toast.makeText(this, "Tên không đúng định dạng!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
 
         if (!email.matches(emailForm)){
             Toast.makeText(this, "Email không đúng định dạng!", Toast.LENGTH_SHORT).show();
