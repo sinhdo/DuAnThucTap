@@ -13,17 +13,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.duanthutap.R;
+
+import com.example.duanthutap.activity.ChatBoxActivity;
+
+
+public class ProfileFragment extends Fragment {
+    
+
 import com.example.duanthutap.activity.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ProfileFragment extends Fragment implements View.OnClickListener {
     private Button btnLogout;
     private FirebaseAuth firebaseAuth;
+    private Button chatboxbtn;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -48,9 +51,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        chatboxbtn = view.findViewById(R.id.chatboxbtn);
         btnLogout = (Button) view.findViewById(R.id.btn_logout);
         firebaseAuth = FirebaseAuth.getInstance();
-
         btnLogout.setOnClickListener(this);
     }
 
