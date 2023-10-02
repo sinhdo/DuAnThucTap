@@ -70,7 +70,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                     user.setId(id);
                                     user.setPhoneNumber("");
                                     user.setImg("");
-                                    user.setRole(false);
                                     usersRef = firebaseHelper.getUsersRef();
                                     usersRef.child(id).setValue(user);
 
