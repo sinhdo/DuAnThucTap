@@ -33,6 +33,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private TextView tvName;
     private TextView tvEmail;
     private DatabaseReference mReference;
+
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -84,15 +85,16 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("Loi", "onCancelled: "+error.getMessage());
+                Log.d("Loi", "onCancelled: " + error.getMessage());
             }
         });
     }
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.btn_log_out){
+        if (view.getId() == R.id.btn_log_out) {
             firebaseAuth.signOut();
             startActivity(new Intent(getActivity(), LoginActivity.class));
         }
     }
+}
