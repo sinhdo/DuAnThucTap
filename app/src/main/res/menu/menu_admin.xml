@@ -5,23 +5,23 @@
             android:id="@+id/home"
             android:icon="@drawable/baseline_home_24"
             android:title="Home" />
+
         <item
-            android:id="@+id/category"
-            android:icon="@drawable/shopping_bag"
-            android:title="Sản phẩm" />
-        <item
-            android:id="@+id/cart"
+            android:id="@+id/ql_oder"
             android:icon="@drawable/baseline_shopping_cart_24"
-            android:title="Giỏ hàng" />
+            android:title="Quản lý Đơn hàng" />
+
+        <item
+            android:id="@+id/ql_product"
+            android:icon="@drawable/baseline_notifications_24"
+            android:title="Quản lý sản phẩm" />
         <item
             android:id="@+id/notification"
             android:icon="@drawable/baseline_notifications_24"
             android:title="Thông báo" />
-
-
         <item
-            android:id="@+id/profile"
+            android:id="@+id/ql_user"
             android:icon="@drawable/baseline_perm_identity_24"
-            android:title="Tài Khoản" />
+            android:title="Quản lý người dùng" />
     </group>
 </menu>

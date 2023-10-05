@@ -1,0 +1,7 @@
+<!-- selector_background.xml -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Trạng thái khi được bấm vào -->
+    <item android:drawable="@color/colorPressed" android:state_pressed="true" />
+    <!-- Trạng thái khi không được bấm -->
+    <item android:drawable="@color/colorNormal" />
+</selector>

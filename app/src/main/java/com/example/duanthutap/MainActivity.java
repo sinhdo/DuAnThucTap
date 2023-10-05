@@ -15,6 +15,7 @@ import android.widget.FrameLayout;
 import com.example.duanthutap.databinding.ActivityMainBinding;
 
 import com.example.duanthutap.fragment.CartFragment;
+import com.example.duanthutap.fragment.CategoryFragment;
 import com.example.duanthutap.fragment.HomeFragment;
 import com.example.duanthutap.fragment.NotificationFragment;
 import com.example.duanthutap.fragment.ProfileFragment;
@@ -38,13 +39,13 @@ public class MainActivity extends AppCompatActivity {
 
             if (id == R.id.home) {
                 replaceFragment(new HomeFragment());
+            } else if (id == R.id.category) {
+                replaceFragment(new CategoryFragment());
             } else if (id == R.id.cart) {
                 replaceFragment(new CartFragment());
             }else if(id==R.id.notification){
                 replaceFragment(new NotificationFragment());
-            }
-
-            else if (id == R.id.profile) {
+            } else if (id == R.id.profile) {
                 replaceFragment(new ProfileFragment());
             }else {
                 replaceFragment(new HomeFragment());
