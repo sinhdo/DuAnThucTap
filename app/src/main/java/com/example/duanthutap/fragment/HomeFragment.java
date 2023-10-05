@@ -95,6 +95,11 @@ public class HomeFragment extends Fragment {
                 }
             }
         }, 2000, 2000);
+    }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        timer.cancel();
     }
 }
