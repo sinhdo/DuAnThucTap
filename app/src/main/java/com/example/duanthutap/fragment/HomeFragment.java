@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,14 @@ import android.widget.Button;
 
 import com.example.duanthutap.R;
 import com.example.duanthutap.activity.ChatBoxActivity;
+import com.example.duanthutap.adapter.SliderAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import me.relex.circleindicator.CircleIndicator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,8 +31,10 @@ import com.example.duanthutap.activity.ChatBoxActivity;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
-
-
+    private Timer timer;
+    private ViewPager vpgSlideImage;
+    private CircleIndicator circleIndicator;
+    private RecyclerView rcvListitem;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -48,6 +60,39 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        vpgSlideImage = (ViewPager) view.findViewById(R.id.vpg_slide_image);
+        circleIndicator = (CircleIndicator) view.findViewById(R.id.circle_indicator);
+        rcvListitem = (RecyclerView) view.findViewById(R.id.rcv_listitem);
+
+        List<Integer> imageList = new ArrayList<>();
+        imageList.add(R.drawable.fist);
+        imageList.add(R.drawable.seco);
+        imageList.add(R.drawable.third);
+        imageList.add(R.drawable.ford);
+        imageList.add(R.drawable.five);
+
+
+        SliderAdapter sliderAdapter = new SliderAdapter(getActivity(), imageList);
+        vpgSlideImage.setAdapter(sliderAdapter);
+
+        circleIndicator.setViewPager(vpgSlideImage);
+        sliderAdapter.registerDataSetObserver(circleIndicator.getDataSetObserver());
+
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int currentItem = vpgSlideImage.getCurrentItem();
+                        int totalItems = vpgSlideImage.getAdapter().getCount();
+                        int nextItem = (currentItem + 1) % totalItems;
+                        vpgSlideImage.setCurrentItem(nextItem);
+                    }
+                });
+            }
+        }, 2000, 2000);
 
     }
 }
