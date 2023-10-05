@@ -12,8 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.duanthutap.Order.OrderActivity;
 import com.example.duanthutap.R;
 import com.example.duanthutap.activity.ChatBoxActivity;
 import com.example.duanthutap.activity.LoginActivity;
@@ -32,6 +34,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private FirebaseUser firebaseUser;
     private TextView tvName;
     private TextView tvEmail;
+    private LinearLayout lnlOrder;
     private DatabaseReference mReference;
 
     public ProfileFragment() {
@@ -60,6 +63,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         btnLogout = (Button) view.findViewById(R.id.btn_log_out);
         tvName = (TextView) view.findViewById(R.id.tv_name);
         tvEmail = (TextView) view.findViewById(R.id.tv_email);
+        lnlOrder = (LinearLayout) view.findViewById(R.id.lnl_order);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -69,6 +73,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         setInfoProfile();
 
         btnLogout.setOnClickListener(this);
+        lnlOrder.setOnClickListener(this);
     }
 
     private void setInfoProfile() {
@@ -95,6 +100,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         if (view.getId() == R.id.btn_log_out) {
             firebaseAuth.signOut();
             startActivity(new Intent(getActivity(), LoginActivity.class));
+        } else if (view.getId() == R.id.lnl_order) {
+            startActivity(new Intent(getActivity(), OrderActivity.class));
         }
     }
 }
