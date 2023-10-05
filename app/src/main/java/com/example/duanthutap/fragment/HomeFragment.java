@@ -82,15 +82,17 @@ public class HomeFragment extends Fragment {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        int currentItem = vpgSlideImage.getCurrentItem();
-                        int totalItems = vpgSlideImage.getAdapter().getCount();
-                        int nextItem = (currentItem + 1) % totalItems;
-                        vpgSlideImage.setCurrentItem(nextItem);
-                    }
-                });
+                if (isAdded() && getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            int currentItem = vpgSlideImage.getCurrentItem();
+                            int totalItems = vpgSlideImage.getAdapter().getCount();
+                            int nextItem = (currentItem + 1) % totalItems;
+                            vpgSlideImage.setCurrentItem(nextItem);
+                        }
+                    });
+                }
             }
         }, 2000, 2000);
 
