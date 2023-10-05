@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.duanthutap.AdminActivity;
 import com.example.duanthutap.MainActivity;
 import com.example.duanthutap.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -19,6 +20,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private FirebaseAuth mAuth;
@@ -66,14 +73,37 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            //progressBar.setVisibility(View.GONE);
-                            if (!task.isSuccessful()) {
-                                // there was an error
-                                Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+                            if (task.isSuccessful()) {
+                                // Đăng nhập thành công
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                String uid = user.getUid();
+
+                                // Truy cập cơ sở dữ liệu Firebase Realtime
+                                DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("user").child(uid);
+                                userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        if (dataSnapshot.exists()) {
+                                            boolean isAdmin = dataSnapshot.child("role").getValue(Boolean.class);
+                                            // Xử lý tùy theo giá trị Boolean (true/false)
+                                            if (isAdmin) {
+                                                // Người dùng là Admin
+                                                startActivity(new Intent(LoginActivity.this, AdminActivity.class));
+                                            } else {
+                                                // Người dùng không phải là Admin
+                                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        // Xử lý lỗi nếu cần
+                                    }
+                                });
                             } else {
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                startActivity(intent);
-                                finishAffinity();
+                                // Đăng nhập không thành công
+                                Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
