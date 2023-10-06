@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.duanthutap.AdminActivity;
+import com.example.duanthutap.MainActivity;
 import com.example.duanthutap.Order.OrderActivity;
 import com.example.duanthutap.R;
 import com.example.duanthutap.activity.ListUserActivity;
@@ -36,6 +38,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private TextView tvEmail;
     private LinearLayout lnlOrder;
     private DatabaseReference mReference;
+    private FirebaseAuth mAuth;
+
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -68,6 +72,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         mReference = FirebaseDatabase.getInstance().getReference();
+        setRoleListUser();
         setInfoProfile();
         btnLogout.setOnClickListener(this);
         btnListUser.setOnClickListener(this);
@@ -102,5 +107,29 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         } else if (view.getId() == R.id.lnl_order) {
             startActivity(new Intent(getActivity(), OrderActivity.class));
         }
+    }
+    public void setRoleListUser(){
+        String id = firebaseUser.getUid();
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("user").child(id);
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    boolean isAdmin = dataSnapshot.child("role").getValue(Boolean.class);
+                    // Xử lý tùy theo giá trị Boolean (true/false)
+                    if (isAdmin) {
+                        // Người dùng là Admin
+                        btnListUser.setVisibility(View.VISIBLE);
+                    } else {
+                        // Người dùng không phải là Admin
+                        btnListUser.setVisibility(View.GONE);
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("Loi", "onCancelled: " + databaseError.getMessage());
+            }
+        });
     }
 }

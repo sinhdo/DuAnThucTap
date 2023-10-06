@@ -120,6 +120,7 @@
                 android:layout_marginTop="20dp"
                 android:background="@drawable/rounded_button"
                 android:text="Danh sách người dùng"
+                android:visibility="gone"
                 android:textAllCaps="false"
                 android:textSize="16dp" />
 
