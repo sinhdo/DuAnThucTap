@@ -12,10 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.duanthutap.Order.OrderActivity;
 import com.example.duanthutap.R;
-import com.example.duanthutap.activity.ChatBoxActivity;
+import com.example.duanthutap.activity.ListUserActivity;
 import com.example.duanthutap.activity.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,11 +29,12 @@ import com.google.firebase.database.ValueEventListener;
 
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
-    private Button btnLogout;
+    private Button btnLogout,btnListUser;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private TextView tvName;
     private TextView tvEmail;
+    private LinearLayout lnlOrder;
     private DatabaseReference mReference;
 
     public ProfileFragment() {
@@ -60,15 +63,16 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         btnLogout = (Button) view.findViewById(R.id.btn_log_out);
         tvName = (TextView) view.findViewById(R.id.tv_name);
         tvEmail = (TextView) view.findViewById(R.id.tv_email);
-
+        btnListUser = (Button) view.findViewById(R.id.btn_list_user);
+        lnlOrder = (LinearLayout) view.findViewById(R.id.lnl_order);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
-
         mReference = FirebaseDatabase.getInstance().getReference();
-
         setInfoProfile();
-
         btnLogout.setOnClickListener(this);
+        btnListUser.setOnClickListener(this);
+        lnlOrder.setOnClickListener(this);
+
     }
 
     private void setInfoProfile() {
@@ -82,19 +86,21 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 tvName.setText(name);
                 tvEmail.setText(email);
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.d("Loi", "onCancelled: " + error.getMessage());
             }
         });
     }
-
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.btn_log_out) {
             firebaseAuth.signOut();
             startActivity(new Intent(getActivity(), LoginActivity.class));
+        } else if (view.getId()==R.id.btn_list_user) {
+            startActivity(new Intent(getActivity(), ListUserActivity.class));
+        } else if (view.getId() == R.id.lnl_order) {
+            startActivity(new Intent(getActivity(), OrderActivity.class));
         }
     }
 }
