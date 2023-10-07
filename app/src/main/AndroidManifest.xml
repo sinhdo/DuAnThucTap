@@ -26,6 +26,15 @@
             android:name=".Order.OrderActivity"
             android:exported="false" />
         <activity
+            android:name=".activity.InfoUserActivity"
+            android:exported="false" />
+       <activity
+            android:name=".activity.ListUserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Order.OrderActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.AddproductActivity"
             android:exported="false" />
         <activity
