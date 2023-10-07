@@ -5,15 +5,9 @@
             android:id="@+id/home"
             android:icon="@drawable/baseline_home_24"
             android:title="Home" />
-
-        <item
-            android:id="@+id/ql_oder"
-            android:icon="@drawable/baseline_shopping_cart_24"
-            android:title="Quản lý Đơn hàng" />
-
         <item
             android:id="@+id/ql_product"
-            android:icon="@drawable/baseline_notifications_24"
+            android:icon="@drawable/shopping_bag"
             android:title="Quản lý sản phẩm" />
         <item
             android:id="@+id/notification"

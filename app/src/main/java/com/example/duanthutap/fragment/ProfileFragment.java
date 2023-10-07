@@ -18,10 +18,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.duanthutap.AdminActivity;
+import com.example.duanthutap.MainActivity;
 import com.example.duanthutap.Order.OrderActivity;
 import com.example.duanthutap.R;
 import com.example.duanthutap.activity.ChatBoxActivity;
 import com.example.duanthutap.activity.InfoUserActivity;
+import com.example.duanthutap.activity.ListUserActivity;
 import com.example.duanthutap.activity.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,7 +37,7 @@ import com.squareup.picasso.Picasso;
 
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
-    private Button btnLogout;
+    private Button btnLogout,btnListUser;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private TextView tvName;
@@ -44,6 +47,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private ImageView imgAvatarUsers;
     private LinearLayout idInfoUsers;
     private Picasso picasso = Picasso.get();
+    private FirebaseAuth mAuth;
+
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -75,9 +80,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         lnlOrder = (LinearLayout) view.findViewById(R.id.lnl_order);
         idInfoUsers = (LinearLayout) view.findViewById(R.id.id_infoUsers);
 
+        btnListUser = (Button) view.findViewById(R.id.btn_list_user);
+        lnlOrder = (LinearLayout) view.findViewById(R.id.lnl_order);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
-
         mReference = FirebaseDatabase.getInstance().getReference();
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         String name = sharedPreferences.getString("name","");
@@ -95,9 +101,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             }
         }
 
+        setRoleListUser();
+        setInfoProfile();
         btnLogout.setOnClickListener(this);
+        btnListUser.setOnClickListener(this);
         lnlOrder.setOnClickListener(this);
         idInfoUsers.setOnClickListener(this);
+
     }
 
     private void setInfoProfile() {
@@ -123,19 +133,19 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 editor.putString("img", img);
                 editor.apply();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.d("Loi", "onCancelled: " + error.getMessage());
             }
         });
     }
-
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.btn_log_out) {
             firebaseAuth.signOut();
             startActivity(new Intent(getActivity(), LoginActivity.class));
+        } else if (view.getId()==R.id.btn_list_user) {
+            startActivity(new Intent(getActivity(), ListUserActivity.class));
         } else if (view.getId() == R.id.lnl_order) {
             startActivity(new Intent(getActivity(), OrderActivity.class));
         } else if (view.getId() == R.id.id_infoUsers) {
@@ -147,5 +157,28 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public void onResume() {
         super.onResume();
         setInfoProfile();
+    public void setRoleListUser(){
+        String id = firebaseUser.getUid();
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("user").child(id);
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    boolean isAdmin = dataSnapshot.child("role").getValue(Boolean.class);
+                    // Xử lý tùy theo giá trị Boolean (true/false)
+                    if (isAdmin) {
+                        // Người dùng là Admin
+                        btnListUser.setVisibility(View.VISIBLE);
+                    } else {
+                        // Người dùng không phải là Admin
+                        btnListUser.setVisibility(View.GONE);
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("Loi", "onCancelled: " + databaseError.getMessage());
+            }
+        });
     }
 }
