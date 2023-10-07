@@ -42,7 +42,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                         break;
                 }
             }
-        });
+        }); 
         tabLayoutMediator.attach();
         binding.imgBack.setOnClickListener(this);
     }

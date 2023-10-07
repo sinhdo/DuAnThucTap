@@ -6,15 +6,19 @@ public class User {
     private String email;
     private String password;
     private String phoneNumber;
+    private String address;
     private String img;
+    private Boolean role;
 
-    public User(String id, String name, String email, String password, String phoneNumber, String img) {
+    public User(String id, String name, String email, String password, String phoneNumber, String address, String img, Boolean role) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
+        this.address = address;
         this.img = img;
+        this.role = role;
     }
 
     public User() {
@@ -66,5 +70,21 @@ public class User {
 
     public void setImg(String img) {
         this.img = img;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Boolean getRole() {
+        return role;
+    }
+
+    public void setRole(Boolean role) {
+        this.role = role;
     }
 }

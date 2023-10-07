@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
 
     <application
         android:allowBackup="true"
@@ -17,6 +19,15 @@
         android:theme="@style/Theme.DuAnThuTap"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".activity.InfoUserActivity"
+            android:exported="false" />
+       <activity
+            android:name=".activity.ListUserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Order.OrderActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.AddproductActivity"
             android:exported="false" />
@@ -39,12 +50,12 @@
             </intent-filter>
         </activity>
         <activity
+
             android:name=".activity.ChiTietSanPhamActivity"
             android:exported="false" />
         <activity
             android:name=".activity.SignUpActivity"
             android:exported="true">
-
         </activity>
         <activity
             android:name=".MainActivity"

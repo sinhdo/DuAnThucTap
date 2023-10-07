@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -95,10 +96,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                             }
                                         }
                                     }
-
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError databaseError) {
                                         // Xử lý lỗi nếu cần
+                                        Log.d("Loi login", "Loi casi dit me may "+databaseError.getMessage());
                                     }
                                 });
                             } else {
