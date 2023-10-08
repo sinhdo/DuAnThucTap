@@ -2,6 +2,7 @@ package com.example.duanthutap.fragment;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,9 +14,12 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -88,6 +92,8 @@ public class CategoryFragment extends Fragment implements ProductAdapter.Callbac
         imgShirt = (ImageButton) view.findViewById(R.id.img_shirt);
         imgDress = (ImageButton) view.findViewById(R.id.img_dress);
         rcvProduct = (RecyclerView) view.findViewById(R.id.rcv_product);
+
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         imgAddProduct.setOnClickListener(v->{
             startActivity(new Intent(getContext(), AddproductActivity.class));
@@ -230,6 +236,34 @@ public class CategoryFragment extends Fragment implements ProductAdapter.Callbac
 
     @Override
     public void itemProductInfo(Product product) {
+        setRoleListUser(product);
+    }
+
+    public void setRoleListUser(Product product){
+        String id = firebaseUser.getUid();
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("user").child(id);
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    boolean isAdmin = dataSnapshot.child("role").getValue(Boolean.class);
+                    // Xử lý tùy theo giá trị Boolean (true/false)
+                    if (isAdmin) {
+                        // Người dùng là Admin
+                        dialogEditProduct(product);
+                    } else {
+                        dialogProduct(product);
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("Loi", "onCancelled: " + databaseError.getMessage());
+            }
+        });
+    }
+
+    private void dialogProduct(Product product){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),R.style.FullScreenDialogTheme);
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View dialogView = inflater.inflate(R.layout.dialog_product, null);
@@ -275,7 +309,6 @@ public class CategoryFragment extends Fragment implements ProductAdapter.Callbac
             }
         });
         tvAddToCart.setOnClickListener(v1->{
-            firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
             String id_user = firebaseUser.getUid();
             String id_product = product.getId();
             String name = product.getName();
@@ -298,6 +331,82 @@ public class CategoryFragment extends Fragment implements ProductAdapter.Callbac
             BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottomNavigationView);
             bottomNavigationView.setSelectedItemId(R.id.cart);
             dialog.dismiss();
+        });
+    }
+
+    private void dialogEditProduct(Product product){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),R.style.FullScreenDialogTheme);
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View dialogView = inflater.inflate(R.layout.dialog_edit_product, null);
+        builder.setView(dialogView);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+        final ImageView[] imgFood = {(ImageView) dialog.findViewById(R.id.imgFood)};
+        EditText edtName = (EditText) dialog.findViewById(R.id.edtName);
+        EditText edtColor = (EditText) dialog.findViewById(R.id.edtColor);
+        EditText edtQuantity = (EditText) dialog.findViewById(R.id.edtQuantity);
+        EditText edtPrice = (EditText) dialog.findViewById(R.id.edtPrice);
+        EditText edtCategory = (EditText) dialog.findViewById(R.id.edtCategory);
+
+        Button btnUpdate = (Button) dialog.findViewById(R.id.btnUpdate);
+        Button btnDelete = (Button) dialog.findViewById(R.id.btnDelete);
+
+        Picasso.get().load(product.getImg()).into(imgFood[0]);
+        edtName.setText(product.getName());
+        edtColor.setText(product.getColor());
+        edtQuantity.setText(""+product.getQuantity());
+        edtPrice.setText(product.getPrice().toString());
+        edtCategory.setText(product.getCategory());
+
+        btnUpdate.setOnClickListener(view -> {
+            product.setName(edtName.getText().toString());
+            product.setColor(edtColor.getText().toString());
+            product.setQuantity(Integer.parseInt(edtQuantity.getText().toString()));
+            product.setPrice(Double.parseDouble(edtPrice.getText().toString()));
+            product.setCategory(edtCategory.getText().toString());
+
+            updateProduct(product);
+
+            dialog.dismiss();
+        });
+
+        btnDelete.setOnClickListener(view -> {
+            deleteProduct(product.getId());
+            dialog.dismiss();
+        });
+    }
+
+    private void deleteProduct(String id){
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = firebaseDatabase.getReference("list_product");
+        myRef.child(id).removeValue(new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                if (error == null) {
+                    Toast.makeText(getContext(), "Xóa thành công", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Xảy ra lỗi khi lưu sản phẩm
+                    Toast.makeText(getContext(), "Xóa thất bại", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void updateProduct(Product product){
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = firebaseDatabase.getReference("list_product");
+
+        String id = product.getId();
+        myRef.child(id).setValue(product, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                if (error == null) {
+                    Toast.makeText(getContext(), "Update sản phẩm thành công", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Xảy ra lỗi khi lưu sản phẩm
+                    Toast.makeText(getContext(), "Update thất bại", Toast.LENGTH_SHORT).show();
+                }
+            }
         });
     }
 }

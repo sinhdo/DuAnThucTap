@@ -31,7 +31,7 @@ public class AdminActivity extends AppCompatActivity {
         fragmentManager = getSupportFragmentManager();
         HomeFragment homeFragment =new HomeFragment();
         fragmentManager.beginTransaction().replace(R.id.frame_layout,homeFragment).commit();
-        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
+        binding.bottomNavigationViewAdmin.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
 
             if (id == R.id.home) {

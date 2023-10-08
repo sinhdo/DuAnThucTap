@@ -37,7 +37,7 @@ import com.squareup.picasso.Picasso;
 
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
-    private Button btnLogout,btnListUser;
+    private Button btnLogout,btnListUser, btnListProduct;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private TextView tvName;
@@ -81,6 +81,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         idInfoUsers = (LinearLayout) view.findViewById(R.id.id_infoUsers);
 
         btnListUser = (Button) view.findViewById(R.id.btn_list_user);
+        btnListProduct = (Button) view.findViewById(R.id.btn_list_product);
         lnlOrder = (LinearLayout) view.findViewById(R.id.lnl_order);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -105,6 +106,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         setInfoProfile();
         btnLogout.setOnClickListener(this);
         btnListUser.setOnClickListener(this);
+        btnListProduct.setOnClickListener(this);
         lnlOrder.setOnClickListener(this);
         idInfoUsers.setOnClickListener(this);
 
@@ -157,6 +159,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public void onResume() {
         super.onResume();
         setInfoProfile();
+    }
     public void setRoleListUser(){
         String id = firebaseUser.getUid();
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("user").child(id);
@@ -169,9 +172,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                     if (isAdmin) {
                         // Người dùng là Admin
                         btnListUser.setVisibility(View.VISIBLE);
+                        btnListProduct.setVisibility(View.VISIBLE);
                     } else {
                         // Người dùng không phải là Admin
                         btnListUser.setVisibility(View.GONE);
+                        btnListProduct.setVisibility(View.GONE);
                     }
                 }
             }
