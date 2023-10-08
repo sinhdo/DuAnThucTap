@@ -21,16 +21,16 @@ import java.util.List;
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
     private Context context;
     private List<ProductsAddCart> productsList;
+    private Callback callback;
     TextView tv_totalbill;
-    public CartAdapter(Context context,TextView tv_totalbill) {
+    public CartAdapter(Context context,List<ProductsAddCart> productsList, TextView tv_totalbill, Callback callback) {
         this.context = context;
-        this.tv_totalbill = tv_totalbill;
-    }
-
-    public void setDataProductsCart(List<ProductsAddCart> productsList) {
         this.productsList = productsList;
+        this.tv_totalbill = tv_totalbill;
+        this.callback = callback;
         notifyDataSetChanged();
     }
+
     @NonNull
     @Override
     public CartAdapter.CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -44,10 +44,14 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         if (products == null) {
             return;
         }
-//        Picasso.get().load(products.getImage_product()).placeholder(R.drawable.shoppingbag).error(R.drawable.shoppingbag).into(holder.img_pro);
-        Picasso.get().load(products.getImage_product()).into(holder.img_pro);
-        holder.name_pro.setText(products.getName_product());
-        holder.num_pro.setText("Số lượng: " + products.getNum_product());
+
+        holder.tvNameProductCart.setText(products.getName_product());
+        holder.tvNumProductCart.setText(products.getNum_product()+"");
+        holder.tvPriceProductCart.setText(products.getPricetotal_product()+"");
+        Picasso.get().load(products.getImage_product()).into(holder.imgProductCart);
+        holder.imgDeleteProductCart.setOnClickListener(view -> {
+            callback.deleteItemCart(products);
+        });
     }
 
     @Override
@@ -56,15 +60,21 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     }
 
     public class CartViewHolder extends RecyclerView.ViewHolder {
-        ImageView img_pro;
-        TextView name_pro, num_pro;
-        ImageView img_delete;
+        private ImageView imgProductCart;
+        private TextView tvNameProductCart;
+        private TextView tvPriceProductCart;
+        private TextView tvNumProductCart;
+        private ImageView imgDeleteProductCart;
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
-            img_pro = itemView.findViewById(R.id.img_pro);
-            name_pro = itemView.findViewById(R.id.name_pro);
-            num_pro = itemView.findViewById(R.id.num_pro);
-            img_delete = itemView.findViewById(R.id.img_delete);
+            imgProductCart = (ImageView) itemView.findViewById(R.id.img_productCart);
+            tvNameProductCart = (TextView) itemView.findViewById(R.id.tv_nameProductCart);
+            tvPriceProductCart = (TextView) itemView.findViewById(R.id.tv_priceProductCart);
+            tvNumProductCart = (TextView) itemView.findViewById(R.id.tv_numProductCart);
+            imgDeleteProductCart = (ImageView) itemView.findViewById(R.id.img_deleteProductCart);
         }
+    }
+    public interface Callback{
+        void deleteItemCart(ProductsAddCart products);
     }
 }

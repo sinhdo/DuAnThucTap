@@ -12,7 +12,8 @@ public class ProductsAddCart {
     public ProductsAddCart() {
     }
 
-    public ProductsAddCart(String id_user, String id_product, String name_product, String image_product, int num_product, double pricetotal_product) {
+    public ProductsAddCart(String id, String id_user, String id_product, String name_product, String image_product, int num_product, double pricetotal_product) {
+        this.id = id;
         this.id_user = id_user;
         this.id_product = id_product;
         this.name_product = name_product;

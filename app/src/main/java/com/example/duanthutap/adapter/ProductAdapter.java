@@ -11,10 +11,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.duanthutap.R;
+import com.example.duanthutap.fragment.CartFragment;
 import com.example.duanthutap.model.Product;
-import com.example.duanthutap.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -29,11 +31,14 @@ import java.util.Map;
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
     private List<Product> mList;
     private Context context;
-    int num;
-
-    public ProductAdapter(Context context,List<Product> mList) {
+    private Callback callback;
+    private FirebaseUser firebaseUser;
+    private DatabaseReference mReference;
+    private FragmentManager fragmentManager;
+    public ProductAdapter(Context context,List<Product> mList, Callback callback) {
         this.context=context;
         this.mList = mList;
+        this.callback = callback;
         notifyDataSetChanged();
     }
     public void setProductList(List<Product> mList) {
@@ -62,52 +67,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         }
         Picasso.get().load(product.getImg()).into(holder.imgProduct);
         holder.imgProduct.setOnClickListener(v->{
-            AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext(),R.style.FullScreenDialogTheme);
-            LayoutInflater inflater = LayoutInflater.from(v.getContext());
-            View dialogView = inflater.inflate(R.layout.dialog_product, null);
-            builder.setView(dialogView);
-            final AlertDialog dialog = builder.create();
-            dialog.show();
-            final ImageView[] imgFood = {(ImageView) dialog.findViewById(R.id.imgFood)};
-            TextView tvName = (TextView) dialog.findViewById(R.id.tv_name);
-            TextView tvPrice = (TextView) dialog.findViewById(R.id.tv_price);
-            ImageView  imgMinus = (ImageView) dialog.findViewById(R.id.img_minus);
-            ImageView  imgPlus = (ImageView) dialog.findViewById(R.id.img_plus);
-            TextView  tvDes = (TextView) dialog.findViewById(R.id.tv_des);
-            TextView tvNum = (TextView) dialog.findViewById(R.id.tv_num);
-            TextView  tvQuantity = (TextView) dialog.findViewById(R.id.tv_quantity);
-            TextView tvTotalPrice = (TextView) dialog.findViewById(R.id.tvTotalPrice);
-            TextView tvAddToCart = (TextView) dialog.findViewById(R.id.tvAddToCart);
-
-            num =1;
-
-            // Ban đầu, tính và hiển thị tổng giá tiền
-            String imgUrl = getItem(holder.getAdapterPosition()).getImg();
-            Picasso.get().load(imgUrl).into(imgFood[0]);
-            tvName.setText(product.getName());
-            tvPrice.setText(product.getPrice()+"VNĐ");
-            tvDes.setText(product.getDescription());
-            tvQuantity.setText("Kho: "+ product.getQuantity());
-            tvNum.setText(num+"");
-            tvTotalPrice.setText(num*product.getPrice()+" VND");
-
-            imgMinus.setOnClickListener(view -> {
-                if (num > 1){
-                    num--;
-                    tvNum.setText(num+"");
-                    tvTotalPrice.setText(num*product.getPrice()+" VND");
-                }
-            });
-            imgPlus.setOnClickListener(view -> {
-                if (num < product.getQuantity()){
-                    num++;
-                    tvNum.setText(num+"");
-                    tvTotalPrice.setText(num*product.getPrice()+" VND");
-                }
-            });
-            tvAddToCart.setOnClickListener(v1->{
-                dialog.dismiss();
-            });
+            callback.itemProductInfo(product);
         });
     }
 
@@ -133,5 +93,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             tvPrice = (TextView) itemView.findViewById(R.id.tv_price);
             tvQuantity = (TextView) itemView.findViewById(R.id.tv_quantity);
         }
+    }
+
+    public interface Callback{
+        void itemProductInfo(Product product);
     }
 }

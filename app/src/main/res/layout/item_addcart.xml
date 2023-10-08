@@ -1,41 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center"
-    android:paddingBottom="8dp">
-    <ImageView
-        android:src="@drawable/cart"
-        android:id="@+id/img_pro"
-        android:layout_width="100dp"
-        android:layout_height="100dp"/>
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:paddingHorizontal="8dp"
-        android:paddingVertical="5dp"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/name_pro"
-            android:text="quần"
-            android:textSize="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/num_pro"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+    android:layout_margin="5dp"
+    app:cardCornerRadius="15dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="bottom|right">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp">
             <ImageView
-                android:src="@drawable/common_google_signin_btn_icon_dark"
-                android:id="@+id/img_delete"
-                android:layout_width="50dp"
-                android:layout_height="30dp"/>
+                android:id="@+id/img_productCart"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:src="@drawable/ic_user"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:id="@+id/tv_nameProductCart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Quần Jean"
+                    android:textSize="23sp"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Giá: "
+                        android:textSize="17sp"/>
+                    <TextView
+                        android:id="@+id/tv_priceProductCart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="300"
+                        android:textSize="17sp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" $"
+                        android:textSize="17sp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Số lượng: "
+                        android:textSize="17sp"/>
+                    <TextView
+                        android:id="@+id/tv_numProductCart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3"
+                        android:textSize="17sp"/>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-
-</LinearLayout>
+        <ImageView
+            android:id="@+id/img_deleteProductCart"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_delete"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"/>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
