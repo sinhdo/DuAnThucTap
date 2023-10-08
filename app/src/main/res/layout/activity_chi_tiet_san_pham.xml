@@ -1,62 +1,247 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="20dp"
     tools:context=".activity.ChiTietSanPhamActivity">
-    <ImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:src="@drawable/img"
-        android:layout_gravity="center"
-        android:layout_margin="20dp"/>
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="ID sản phẩm : 123"
-        android:textStyle="bold"
-        android:layout_margin="8dp"
-        android:textSize="20dp"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Tên sản phẩm : abc123"
-        android:layout_margin="8dp"
-        android:textSize="20dp"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Giá sản phẩm : 100.000 VNĐ"
-        android:layout_margin="8dp"
-        android:textSize="20dp"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Loại sản phẩm : Áo"
-        android:layout_margin="8dp"
-        android:textSize="20dp"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Số lượng : 6"
-        android:layout_margin="8dp"
-        android:textSize="20dp"/>
-    <Button
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Sửa sản phẩm"
-        />
-    <Button
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Xoá sản phẩm"
-        />
-    <!--    abc-->
+        android:layout_height="wrap_content">
+        <ImageButton
+            android:id="@+id/img_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/angle_left"
+            android:background="@color/white"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"/>
 
+        <ImageButton
+            android:id="@+id/btn_cart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="30dp"
+            android:background="@color/white"
+            android:src="@drawable/cart" />
 
-</LinearLayout>
+        <FrameLayout
+            android:id="@+id/product_lay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/btn_cart">
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/vpg_slide_product"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:layout_marginTop="30dp" />
+
+            <me.relex.circleindicator.CircleIndicator
+                android:id="@+id/circle_indicator"
+                android:layout_width="wrap_content"
+                app:ci_drawable="@drawable/indicator"
+                app:ci_drawable_unselected="@drawable/indicator_null_select"
+                android:layout_height="40dp"
+                android:layout_gravity="center|bottom" />
+
+            <ImageButton
+                android:id="@+id/img_like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_margin="20dp"
+                android:layout_gravity="bottom|end"
+                android:src="@drawable/heart_24" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tv_name_product"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/product_lay"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="18dp"
+            android:text="Collar Solid Pocket BlazerBlazer"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/tv_priceProduct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_name_product"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="15dp"
+            android:text="816,454đ"
+            android:textColor="#FF3838"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/lnl_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_priceProduct"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="15dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_color"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:text="Màu"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:layout_width="45dp"
+                    android:layout_height="52dp"
+                    android:layout_margin="5dp"
+                    android:backgroundTint="#5C3C0B"
+                    app:cornerRadius="100dp"
+                    app:strokeColor="@color/colorNormal"
+                    app:strokeWidth="3dp" />
+
+                <Button
+                    android:layout_width="45dp"
+                    android:layout_height="52dp"
+                    android:layout_margin="5dp"
+                    android:backgroundTint="#E6A94E"
+                    app:cornerRadius="100dp"
+                    app:strokeColor="@color/colorNormal"
+                    app:strokeWidth="3dp" />
+
+                <Button
+                    android:layout_width="45dp"
+                    android:layout_height="52dp"
+                    android:layout_margin="5dp"
+                    android:backgroundTint="@color/black"
+                    app:cornerRadius="100dp"
+                    app:strokeColor="@color/colorNormal"
+                    app:strokeWidth="3dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lnl_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lnl_color"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="Kích cỡ"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:backgroundTint="@color/white"
+                    android:shadowColor="@color/black"
+                    android:text="XS"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    app:strokeColor="@color/colorNormal"
+                    app:strokeWidth="2dp" />
+
+                <Button
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:backgroundTint="@color/white"
+                    android:shadowColor="@color/black"
+                    android:text="S"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    app:strokeColor="@color/colorNormal"
+                    app:strokeWidth="2dp" />
+
+                <Button
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:backgroundTint="@color/white"
+                    android:shadowColor="@color/black"
+                    android:text="M"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    app:strokeColor="@color/colorNormal"
+                    app:strokeWidth="2dp" />
+
+                <Button
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:backgroundTint="@color/white"
+                    android:shadowColor="@color/black"
+                    android:text="XL"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    app:strokeColor="@color/colorNormal"
+                    app:strokeWidth="2dp" />
+            </LinearLayout>
+
+            <Button
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:backgroundTint="@color/white"
+                android:shadowColor="@color/black"
+                android:text="2XL"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:strokeColor="@color/colorNormal"
+                app:strokeWidth="2dp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_add_to_cart"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lnl_size"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="80dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="80dp"
+            android:drawableEnd="@drawable/cart"
+            android:padding="15dp"
+            android:backgroundTint="#FF9800"
+            android:text="Mua hàng"
+            app:cornerRadius="30dp"
+            app:strokeColor="@color/black"
+            app:strokeWidth="1dp"/>
+    </RelativeLayout>
+</ScrollView>
