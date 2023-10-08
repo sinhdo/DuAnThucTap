@@ -19,6 +19,12 @@
         android:theme="@style/Theme.DuAnThuTap"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+       <activity
+            android:name=".activity.ListUserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Order.OrderActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.InfoUserActivity"
             android:exported="false" />
