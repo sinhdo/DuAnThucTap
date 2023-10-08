@@ -22,9 +22,9 @@
         <activity
             android:name=".activity.InfoUserActivity"
             android:exported="false" />
-       <activity
-            android:name=".activity.ListUserActivity"
-            android:exported="false" />
+<!--       <activity-->
+<!--            android:name=".activity.ListUserActivity"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".Order.OrderActivity"
             android:exported="false" />
@@ -39,15 +39,17 @@
             android:exported="false" />
         <activity
             android:name=".activity.ManHinhChaoActivity"
-            android:exported="true" />
-        <activity
-            android:name=".activity.LoginActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.LoginActivity"
+            android:exported="true" >
         </activity>
         <activity
 
@@ -60,7 +62,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" >
-
         </activity>
     </application>
 

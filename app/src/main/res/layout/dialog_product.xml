@@ -59,7 +59,7 @@
                     android:id="@+id/tv_price"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="100.000 VNĐ"
+                    android:text="$ 100.000"
                     android:textAlignment="center"
                     android:textColor="#373b54"
                     android:textSize="24dp"

@@ -15,6 +15,7 @@ public class Product {
     private Double price;
     private int sold;
     private int quantity;
+    private int num;
 
     public Product() {
     }
@@ -101,6 +102,14 @@ public class Product {
 
     public void setSold(int sold) {
         this.sold = sold;
+    }
+
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
     }
 
     public Map<String,Object> toMap(){

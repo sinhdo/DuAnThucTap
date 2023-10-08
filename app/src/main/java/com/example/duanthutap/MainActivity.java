@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         fragmentManager = getSupportFragmentManager();
         HomeFragment homeFragment =new HomeFragment();
-        fragmentManager.beginTransaction().replace(R.id.frame_layout,homeFragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.frame_layoutMain,homeFragment).commit();
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
 
@@ -55,9 +55,11 @@ public class MainActivity extends AppCompatActivity {
     }
     private void replaceFragment(Fragment fragment) {
         fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame_layout, fragment);
-        fragmentTransaction.commit();
+        if (!fragment.isAdded()){
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.frame_layoutMain, fragment);
+            fragmentTransaction.commit();
+        }
         //thu
     }
 }
