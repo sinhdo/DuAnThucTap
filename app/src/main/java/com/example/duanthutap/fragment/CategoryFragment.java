@@ -280,6 +280,7 @@ public class CategoryFragment extends Fragment implements ProductAdapter.Callbac
         TextView  tvQuantity = (TextView) dialog.findViewById(R.id.tv_quantity);
         TextView tvTotalPrice = (TextView) dialog.findViewById(R.id.tvTotalPrice);
         TextView tvAddToCart = (TextView) dialog.findViewById(R.id.tvAddToCart);
+        ImageView imgBackToCategory = (ImageView) dialog.findViewById(R.id.img_backToCategory);
 
         num =1;
 
@@ -290,10 +291,13 @@ public class CategoryFragment extends Fragment implements ProductAdapter.Callbac
         tvName.setText(product.getName());
         tvPrice.setText("$ "+product.getPrice());
         tvDes.setText(product.getDescription());
-        tvQuantity.setText("Kho: "+ product.getQuantity());
+        tvQuantity.setText(""+ product.getQuantity());
         tvNum.setText(num+"");
         tvTotalPrice.setText("$ "+num*product.getPrice());
 
+        imgBackToCategory.setOnClickListener(view -> {
+            dialog.dismiss();
+        });
         imgMinus.setOnClickListener(view -> {
             if (num > 1){
                 num--;

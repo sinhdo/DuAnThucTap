@@ -81,7 +81,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         idInfoUsers = (LinearLayout) view.findViewById(R.id.id_infoUsers);
 
         btnListUser = (Button) view.findViewById(R.id.btn_list_user);
-        btnListProduct = (Button) view.findViewById(R.id.btn_list_product);
         lnlOrder = (LinearLayout) view.findViewById(R.id.lnl_order);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -106,7 +105,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         setInfoProfile();
         btnLogout.setOnClickListener(this);
         btnListUser.setOnClickListener(this);
-        btnListProduct.setOnClickListener(this);
         lnlOrder.setOnClickListener(this);
         idInfoUsers.setOnClickListener(this);
 
@@ -172,11 +170,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                     if (isAdmin) {
                         // Người dùng là Admin
                         btnListUser.setVisibility(View.VISIBLE);
-                        btnListProduct.setVisibility(View.VISIBLE);
                     } else {
                         // Người dùng không phải là Admin
                         btnListUser.setVisibility(View.GONE);
-                        btnListProduct.setVisibility(View.GONE);
                     }
                 }
             }
