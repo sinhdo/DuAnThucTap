@@ -39,7 +39,7 @@ import com.squareup.picasso.Picasso;
 
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
-    private Button btnLogout, btnListUser;
+    private Button btnLogout,btnListUser, btnListProduct;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private TextView tvName;
@@ -162,7 +162,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         super.onResume();
         setInfoProfile();
     }
-    public void setRoleListUser () {
+    public void setRoleListUser(){
         String id = firebaseUser.getUid();
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("user").child(id);
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {

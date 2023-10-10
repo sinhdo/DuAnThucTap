@@ -68,7 +68,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
         android:orientation="horizontal">
-
         <androidx.cardview.widget.CardView
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -154,7 +153,29 @@
 
         </LinearLayout>
     </LinearLayout>
+    <Button
+        android:id="@+id/btn_list_user"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rounded_button"
+        android:text="Danh sách người dùng"
+        android:textAllCaps="false"
+        android:textSize="16dp"
+        android:visibility="gone" />
 
+    <Button
+        android:id="@+id/btn_list_product"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rounded_button"
+        android:text="Danh sách sản phẩm"
+        android:textAllCaps="false"
+        android:textSize="16dp"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/btn_log_out"

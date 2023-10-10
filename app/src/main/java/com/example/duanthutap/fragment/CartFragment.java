@@ -67,8 +67,9 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
     RecyclerView recycler_listproductsadd;
     CartAdapter cartAdapter;
     private FirebaseUser firebaseUser;
-    private int tax = 30;
+    private int tax = 5;
     private ArrayList<ProductsAddCart> list = new ArrayList<>();
+
     public CartFragment() {
         // Required empty public constructor
     }
@@ -96,7 +97,7 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
         GetView(view);
         recycler_listproductsadd.setLayoutManager(new LinearLayoutManager(getActivity()));
         getListProductAddCart();
-        cartAdapter = new CartAdapter(getActivity(),list, tv_total,this);
+        cartAdapter = new CartAdapter(getActivity(), list, tv_total, this);
         recycler_listproductsadd.setAdapter(cartAdapter);
 
         sumPriceProduct();
@@ -114,7 +115,7 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
     public void deleteItemCart(ProductsAddCart products) {
         AlertDialog.Builder aBuilder = new AlertDialog.Builder(getActivity());
         aBuilder.setTitle("Xóa sản phẩm trong giỏ hàng");
-        aBuilder.setMessage("Bạn có chắc chắn muốn xóa "+products.getName_product()+" không?");
+        aBuilder.setMessage("Bạn có chắc chắn muốn xóa " + products.getName_product() + " không?");
         aBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -137,14 +138,15 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
         aBuilder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();;
+                dialogInterface.cancel();
+                ;
             }
         });
         AlertDialog alertDialog = aBuilder.create();
         alertDialog.show();
     }
 
-    private void getListProductAddCart(){
+    private void getListProductAddCart() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         String id_user = firebaseUser.getUid();
@@ -152,11 +154,11 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
         myReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (list != null){
+                if (list != null) {
                     list.clear();
                 }
 
-                for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     ProductsAddCart product = dataSnapshot.getValue(ProductsAddCart.class);
                     list.add(product);
                 }
@@ -166,12 +168,12 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getContext(), "Get list users faild", Toast.LENGTH_SHORT).show();
-                Log.d("LISTCART", "onCancelled: "+error.getMessage());
+                Log.d("LISTCART", "onCancelled: " + error.getMessage());
             }
         });
     }
+
     private void sumPriceProduct() {
-        taxPrice.setText("$ "+tax);
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         String id_user = firebaseUser.getUid();
@@ -180,18 +182,21 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<ProductsAddCart> list = new ArrayList<>();
-                for (DataSnapshot dataSnapshot: snapshot.getChildren()){
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     ProductsAddCart product = dataSnapshot.getValue(ProductsAddCart.class);
                     list.add(product);
                 }
 
-                double totalAllProduct = caculatorTotalPrice(list);
-                double totalCart = totalAllProduct+tax;
-
-                totalPriceItem.setText("$ "+totalAllProduct);
-                totalPriceCart.setText("$ "+totalCart);
+                if (list.size() == 0) {
+                    return;
+                } else {
+                    double totalAllProduct = caculatorTotalPrice(list);
+                    double totalCart = totalAllProduct + tax;
+                    totalPriceItem.setText("$ " + totalAllProduct);
+                    totalPriceCart.setText("$ " + totalCart);
+                    taxPrice.setText("$ " + tax);
+                }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.d("Loi", "onCancelled: " + error.getMessage());
@@ -199,9 +204,9 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
         });
     }
 
-    private double caculatorTotalPrice(List<ProductsAddCart> productList){
+    private double caculatorTotalPrice(List<ProductsAddCart> productList) {
         double totalPrice = 0;
-        for (ProductsAddCart product: productList) {
+        for (ProductsAddCart product : productList) {
             totalPrice += product.getPricetotal_product() * product.getNum_product();
         }
         return totalPrice;

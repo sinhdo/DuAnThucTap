@@ -3,6 +3,7 @@ package com.example.duanthutap.activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -14,6 +15,7 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -31,8 +33,11 @@ public class AddproductActivity extends AppCompatActivity {
     private TextInputEditText edDes;
     private TextInputEditText edPrice;
     private TextInputEditText edQuantity;
-    private Button btnAdd;
-    private Button btnCanel;
+
+    private ImageButton imgBack;
+    private AppCompatButton btnAdd;
+    private AppCompatButton btnCanel;
+
     private String selectedImageUrl;
 
     @Override
@@ -53,6 +58,12 @@ public class AddproductActivity extends AppCompatActivity {
                     // Thành công, hiển thị ảnh trong ImageView
                     imgProduct.setImageURI(Uri.parse(selectedImageUrl));
                     Toast.makeText(AddproductActivity.this, "Thêm sản phẩm thành công", Toast.LENGTH_SHORT).show();
+                    edName.setText("");
+                    edCategory.setText("");
+                    imgProduct.setImageDrawable(getDrawable(R.drawable.t_shirt));
+                    edPrice.setText("");
+                    edDes.setText("");
+                    edQuantity.setText("");
                 } else {
                     // Xảy ra lỗi khi lưu sản phẩm
                     Toast.makeText(AddproductActivity.this, "Lỗi khi lưu sản phẩm vào Realtime Database", Toast.LENGTH_SHORT).show();
@@ -67,8 +78,9 @@ public class AddproductActivity extends AppCompatActivity {
         edDes = (TextInputEditText) findViewById(R.id.ed_des);
         edPrice = (TextInputEditText) findViewById(R.id.ed_price);
         edQuantity = (TextInputEditText) findViewById(R.id.ed_quantity);
-        btnAdd = (Button) findViewById(R.id.btn_add);
-        btnCanel = (Button) findViewById(R.id.btn_canel);
+        imgBack = (ImageButton) findViewById(R.id.img_back);
+        btnAdd = (AppCompatButton) findViewById(R.id.btn_add);
+        btnCanel = (AppCompatButton) findViewById(R.id.btn_canel);
 
         btnCanel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,6 +116,9 @@ public class AddproductActivity extends AppCompatActivity {
                 Product product = new Product(newKey,name,category,des, selectedImageUrl,"","",Double.parseDouble(price),2,Integer.parseInt(quantity));
                 onClickAdd(product);
             }
+        });
+        imgBack.setOnClickListener(v->{
+            finish();
         });
     }
     @Override

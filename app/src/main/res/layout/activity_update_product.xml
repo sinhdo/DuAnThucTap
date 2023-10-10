@@ -20,7 +20,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Thêm sản phẩm"
+            android:text="Sửa sản phẩm"
             android:textSize="23sp"
             android:textColor="@color/colorRed"
             android:textStyle="bold"
@@ -28,7 +28,6 @@
             android:layout_marginRight="20dp"
             android:textAlignment="center"/>
     </LinearLayout>
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -38,6 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="48dp"
+            android:layout_marginTop="20dp"
             android:orientation="vertical">
 
             <ImageView
@@ -61,7 +61,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_edittext_product"
-                    android:textColor="#0C0B0B" />
+                    android:textColor="#BBAEAE" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -76,7 +76,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_edittext_product"
-                    android:textColor="#0C0B0B" />
+                    android:textColor="#BBAEAE" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -91,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_edittext_product"
                     android:inputType="number"
-                    android:textColor="#0C0B0B" />
+                    android:textColor="#BBAEAE" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -107,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_edittext_product"
                     android:inputType="number"
-                    android:textColor="#0C0B0B" />
+                    android:textColor="#BBAEAE" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -121,7 +121,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_edittext_product"
-                    android:textColor="#0C0B0B" />
+                    android:textColor="#BBAEAE" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
@@ -131,26 +131,26 @@
                 android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_add"
+                    android:id="@+id/btn_delete"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     android:background="@drawable/bg_btn_update_product"
-                    android:backgroundTint="#181819"
-                    android:text="Thêm"
+                    android:backgroundTint="#ED0808"
+                    android:text="Xóa"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_canel"
+                    android:id="@+id/btn_update"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:background="@drawable/bg_btn_update_product"
-                    android:text="Canel"
+                    android:text="Sửa"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textStyle="bold" />

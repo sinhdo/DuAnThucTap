@@ -3,6 +3,7 @@ package com.example.duanthutap.fragment;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,9 +19,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,8 @@ import com.example.duanthutap.adapter.ProductAdapter;
 import com.example.duanthutap.database.FirebaseRole;
 import com.example.duanthutap.model.Product;
 import com.example.duanthutap.model.ProductsAddCart;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -97,13 +100,14 @@ public class CategoryFragment extends Fragment implements ProductAdapter.Callbac
         rcvProduct = (RecyclerView) view.findViewById(R.id.rcv_product);
         searchView = view.findViewById(R.id.search_Pr);
 
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         imgAddProduct.setOnClickListener(v->{
-            setRoleAdd();
             startActivity(new Intent(getContext(), AddproductActivity.class));
         });
         rcvProduct.setLayoutManager(new GridLayoutManager(getContext(), 2));
         adapter = new ProductAdapter(getContext(),mList,this);
         rcvProduct.setAdapter(adapter);
+        setRoleAdd();
         getListProduct();
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -253,6 +257,34 @@ public class CategoryFragment extends Fragment implements ProductAdapter.Callbac
 
     @Override
     public void itemProductInfo(Product product) {
+        setRoleListUser(product);
+    }
+
+    public void setRoleListUser(Product product){
+        String id = firebaseUser.getUid();
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("user").child(id);
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    boolean isAdmin = dataSnapshot.child("role").getValue(Boolean.class);
+                    // Xử lý tùy theo giá trị Boolean (true/false)
+                    if (isAdmin) {
+                        // Người dùng là Admin
+                        dialogEditProduct(product);
+                    } else {
+                        dialogProduct(product);
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("Loi", "onCancelled: " + databaseError.getMessage());
+            }
+        });
+    }
+
+    private void dialogProduct(Product product){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),R.style.FullScreenDialogTheme);
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View dialogView = inflater.inflate(R.layout.dialog_info_product, null);
@@ -279,12 +311,11 @@ public class CategoryFragment extends Fragment implements ProductAdapter.Callbac
 
         TextView tvTotalPrice = (TextView) dialog.findViewById(R.id.tvTotalPrice);
         TextView tvAddToCart = (TextView) dialog.findViewById(R.id.tvAddToCart);
+        ImageView imgBackToCategory = (ImageView) dialog.findViewById(R.id.img_back);
 
 
         num =1;
 
-        // Ban đầu, tính và hiển thị tổng giá tiền
-        // String imgUrl = adapter.getItem(holder.getAdapterPosition()).getImg();
         String imgUrl = product.getImg();
         Picasso.get().load(imgUrl).into(imgPr[0]);
         tvName.setText(product.getName());
@@ -292,6 +323,9 @@ public class CategoryFragment extends Fragment implements ProductAdapter.Callbac
         tvNum.setText(num+"");
         tvTotalPrice.setText("$ "+num*product.getPrice());
 
+        imgBackToCategory.setOnClickListener(view -> {
+            dialog.dismiss();
+        });
         imgMinus.setOnClickListener(view -> {
             if (num > 1){
                 num--;
@@ -413,7 +447,6 @@ public class CategoryFragment extends Fragment implements ProductAdapter.Callbac
             dialog.dismiss();
         });
         tvAddToCart.setOnClickListener(v1->{
-            firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
             String id_user = firebaseUser.getUid();
             String id_product = product.getId();
             String name = product.getName();
@@ -485,8 +518,104 @@ public class CategoryFragment extends Fragment implements ProductAdapter.Callbac
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("loi", "onCancelled: "+databaseError.getMessage());
+                Log.d("loi", "onCancelled: " + databaseError.getMessage());
             }
         });
     }
+
+    private void dialogEditProduct(Product product){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),R.style.FullScreenDialogTheme);
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View dialogView = inflater.inflate(R.layout.dialog_edit_product, null);
+        builder.setView(dialogView);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+        ImageView imgPr = (ImageView) dialog.findViewById(R.id.img_product);
+        EditText edtName = (EditText) dialog.findViewById(R.id.ed_name);
+        ImageButton   imgBack = (ImageButton) dialog.findViewById(R.id.img_back);
+        EditText edtDes = (EditText) dialog.findViewById(R.id.ed_des);
+        EditText edtQuantity = (EditText) dialog.findViewById(R.id.ed_quantity);
+        EditText edtPrice = (EditText) dialog.findViewById(R.id.ed_price);
+        EditText edtCategory = (EditText) dialog.findViewById(R.id.ed_category);
+
+        Button btnUpdate = (Button) dialog.findViewById(R.id.btn_update);
+        Button btnDelete = (Button) dialog.findViewById(R.id.btn_delete);
+
+
+        Picasso.get().load(product.getImg()).into(imgPr);
+        edtName.setText(product.getName());
+        edtDes.setText(product.getDescription());
+        edtQuantity.setText(""+product.getQuantity());
+        edtPrice.setText(product.getPrice().toString());
+        edtCategory.setText(product.getCategory());
+
+        btnUpdate.setOnClickListener(view -> {
+            product.setName(edtName.getText().toString());
+            product.setDescription(edtDes.getText().toString());
+            product.setQuantity(Integer.parseInt(edtQuantity.getText().toString()));
+            product.setPrice(Double.parseDouble(edtPrice.getText().toString()));
+            product.setCategory(edtCategory.getText().toString());
+
+            updateProduct(product);
+
+            dialog.dismiss();
+        });
+
+        btnDelete.setOnClickListener(view -> {
+            deleteProduct(product.getId());
+            dialog.dismiss();
+        });
+        imgBack.setOnClickListener(v->{
+            dialog.dismiss();
+        });
+    }
+
+    private void deleteProduct(String id){
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = firebaseDatabase.getReference("list_product");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Xóa sản phẩm");
+        builder.setMessage("Bạn có chắc chắn muốn xóa sản phẩm này?");
+        builder.setPositiveButton("Xóa", (dialog, which) -> {
+
+            myRef.child(id).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(getContext(), "Xóa thành công", Toast.LENGTH_SHORT).show();
+                        getListProduct();
+                    } else {
+                        // Handle error here
+                        Exception e = task.getException();
+                        if (e != null) {
+                            Log.d("Lỗi", "onComplete: "+e);
+                        }
+                    }
+                }
+            });
+        });
+        builder.setNegativeButton("Hủy", null);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void updateProduct(Product product){
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = firebaseDatabase.getReference("list_product");
+
+        String id = product.getId();
+        myRef.child(id).setValue(product, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                if (error == null) {
+                    Toast.makeText(getContext(), "Update sản phẩm thành công", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Xảy ra lỗi khi lưu sản phẩm
+                    Toast.makeText(getContext(), "Update thất bại", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
 }
