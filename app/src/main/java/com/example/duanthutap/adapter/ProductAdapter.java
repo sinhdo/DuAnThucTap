@@ -1,9 +1,6 @@
 package com.example.duanthutap.adapter;
 
 
-import static java.lang.Double.parseDouble;
-
-import android.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,21 +9,16 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.duanthutap.R;
-import com.example.duanthutap.fragment.CartFragment;
 import com.example.duanthutap.model.Product;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
 import android.content.Context;
 import com.squareup.picasso.Picasso;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
     private List<Product> mList;
@@ -44,6 +36,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public void setProductList(List<Product> mList) {
         this.mList = mList;
         notifyDataSetChanged();
+    }
+    public void setCallback(Callback callback) {
+        this.callback = callback;
     }
     @NonNull
     @Override
@@ -67,7 +62,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         }
         Picasso.get().load(product.getImg()).into(holder.imgProduct);
         holder.imgProduct.setOnClickListener(v->{
-            callback.itemProductInfo(product);
+                callback.itemProductInfo(product);
         });
     }
 

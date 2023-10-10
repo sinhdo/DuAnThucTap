@@ -12,6 +12,7 @@ public class Product {
     private String description;
     private String img;
     private String color;
+    private String size;
     private Double price;
     private int sold;
     private int quantity;
@@ -20,13 +21,14 @@ public class Product {
     public Product() {
     }
 
-    public Product(String id,String name,String category, String description, String img, String color, Double price,int sold,int quantity) {
+    public Product(String id,String name,String category, String description, String img, String color,String size, Double price,int sold,int quantity) {
         this.id = id;
         this.name=name;
         this.category = category;
         this.description = description;
         this.img = img;
         this.color = color;
+        this.size=size;
         this.price = price;
         this.sold=sold;
         this.quantity = quantity;
@@ -110,6 +112,14 @@ public class Product {
 
     public void setNum(int num) {
         this.num = num;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
     }
 
     public Map<String,Object> toMap(){

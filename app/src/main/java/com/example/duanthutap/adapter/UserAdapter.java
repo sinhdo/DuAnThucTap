@@ -26,6 +26,10 @@ public class UserAdapter   extends RecyclerView.Adapter<UserAdapter.MyViewHoder>
         this.context = context;
 
     }
+    public void setData(List<User> list){
+        this.list=list;
+        notifyDataSetChanged();
+    }
 
     @NonNull
     @Override

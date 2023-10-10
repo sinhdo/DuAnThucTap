@@ -48,6 +48,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         holder.tvNameProductCart.setText(products.getName_product());
         holder.tvNumProductCart.setText(products.getNum_product()+"");
         holder.tvPriceProductCart.setText(products.getPricetotal_product()+"");
+        holder.tvColor.setText(products.getColor_product());
+        holder.tvSize.setText(products.getSize_product());
         Picasso.get().load(products.getImage_product()).into(holder.imgProductCart);
         holder.imgDeleteProductCart.setOnClickListener(view -> {
             callback.deleteItemCart(products);
@@ -64,6 +66,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         private TextView tvNameProductCart;
         private TextView tvPriceProductCart;
         private TextView tvNumProductCart;
+        private TextView tvColor;
+        private TextView tvSize;
+
         private ImageView imgDeleteProductCart;
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -72,6 +77,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             tvPriceProductCart = (TextView) itemView.findViewById(R.id.tv_priceProductCart);
             tvNumProductCart = (TextView) itemView.findViewById(R.id.tv_numProductCart);
             imgDeleteProductCart = (ImageView) itemView.findViewById(R.id.img_deleteProductCart);
+            tvColor = (TextView) itemView.findViewById(R.id.tv_colorProductCart);
+            tvSize = (TextView) itemView.findViewById(R.id.tv_sizeProductCart);
         }
     }
     public interface Callback{

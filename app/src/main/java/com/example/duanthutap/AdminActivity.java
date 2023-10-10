@@ -5,14 +5,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 
-import com.example.duanthutap.Order.OrderActivity;
 import com.example.duanthutap.databinding.ActivityAdminBinding;
-import com.example.duanthutap.databinding.ActivityMainBinding;
-import com.example.duanthutap.fragment.CartFragment;
 import com.example.duanthutap.fragment.CategoryFragment;
 import com.example.duanthutap.fragment.HomeFragment;
 import com.example.duanthutap.fragment.NotificationFragment;
@@ -31,7 +27,7 @@ public class AdminActivity extends AppCompatActivity {
         fragmentManager = getSupportFragmentManager();
         HomeFragment homeFragment =new HomeFragment();
         fragmentManager.beginTransaction().replace(R.id.frame_layout,homeFragment).commit();
-        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
+        binding.bottomNavigationViewAdmin.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
 
             if (id == R.id.home) {
