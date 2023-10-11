@@ -33,6 +33,10 @@ public class UserAdapter   extends RecyclerView.Adapter<UserAdapter.MyViewHoder>
     public interface Callback{
         void itemUserInfo(User user);
     }
+    public void setData(List<User> list){
+        this.list=list;
+        notifyDataSetChanged();
+    }
 
 
 

@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activity.ChiTietSanPhamActivity">
+    android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -35,12 +34,10 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/btn_cart">
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/vpg_slide_product"
-                android:layout_width="match_parent"
-                android:layout_height="350dp"
-                android:layout_marginTop="30dp" />
-
+           <ImageView
+               android:id="@+id/img_pr"
+               android:layout_width="match_parent"
+               android:layout_height="350dp"/>
             <me.relex.circleindicator.CircleIndicator
                 android:id="@+id/circle_indicator"
                 android:layout_width="wrap_content"
@@ -69,14 +66,51 @@
             android:layout_marginTop="18dp"
             android:text="Collar Solid Pocket BlazerBlazer"
             android:textColor="@color/black"
-            android:textSize="18dp"
-            android:textStyle="normal" />
+            android:textSize="20dp"
+            android:textStyle="bold" />
+        <LinearLayout
+            android:id="@+id/lnl_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/tv_name_product"
+            android:layout_marginStart="150dp"
+            android:background="@drawable/gray_bar">
+
+            <ImageView
+                android:id="@+id/img_minus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                app:srcCompat="@drawable/baseline_horizontal_rule_24" />
+            <TextView
+                android:id="@+id/tv_num"
+                android:layout_width="36dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/card_background"
+                android:text="1"
+                android:textAlignment="center"
+                android:textColor="#072BF1"
+                android:textSize="20dp" />
+
+            <ImageView
+                android:id="@+id/img_plus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                app:srcCompat="@drawable/baseline_add_24" />
+
+        </LinearLayout>
+
 
         <TextView
             android:id="@+id/tv_priceProduct"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_name_product"
+            android:layout_below="@id/lnl_quantity"
             android:layout_alignParentStart="true"
             android:layout_marginStart="20dp"
             android:layout_marginTop="15dp"
@@ -111,7 +145,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <Button
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_brown"
                     android:layout_width="45dp"
                     android:layout_height="52dp"
                     android:layout_margin="5dp"
@@ -120,16 +155,18 @@
                     app:strokeColor="@color/colorNormal"
                     app:strokeWidth="3dp" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_white"
                     android:layout_width="45dp"
                     android:layout_height="52dp"
                     android:layout_margin="5dp"
-                    android:backgroundTint="#E6A94E"
+                    android:backgroundTint="#F8F6F4"
                     app:cornerRadius="100dp"
                     app:strokeColor="@color/colorNormal"
                     app:strokeWidth="3dp" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_black"
                     android:layout_width="45dp"
                     android:layout_height="52dp"
                     android:layout_margin="5dp"
@@ -139,7 +176,6 @@
                     app:strokeWidth="3dp" />
             </LinearLayout>
         </LinearLayout>
-
         <LinearLayout
             android:id="@+id/lnl_size"
             android:layout_width="wrap_content"
@@ -165,6 +201,7 @@
                 android:orientation="horizontal">
 
                 <Button
+                    android:id="@+id/btn_xs"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -177,6 +214,7 @@
                     app:strokeWidth="2dp" />
 
                 <Button
+                    android:id="@+id/btn_s"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -189,6 +227,7 @@
                     app:strokeWidth="2dp" />
 
                 <Button
+                    android:id="@+id/btn_m"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -201,6 +240,7 @@
                     app:strokeWidth="2dp" />
 
                 <Button
+                    android:id="@+id/btn_xl"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -212,36 +252,67 @@
                     app:strokeColor="@color/colorNormal"
                     app:strokeWidth="2dp" />
             </LinearLayout>
-
-            <Button
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:backgroundTint="@color/white"
-                android:shadowColor="@color/black"
-                android:text="2XL"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                app:strokeColor="@color/colorNormal"
-                app:strokeWidth="2dp" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_add_to_cart"
-            android:layout_width="250dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/lnl_size"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="80dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
             android:layout_marginTop="30dp"
-            android:layout_marginEnd="80dp"
-            android:drawableEnd="@drawable/cart"
-            android:padding="15dp"
-            android:backgroundTint="#FF9800"
-            android:text="Mua hàng"
-            app:cornerRadius="30dp"
-            app:strokeColor="@color/black"
-            app:strokeWidth="1dp"/>
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="65dp"
+                android:layout_margin="8dp"
+                android:layout_weight="0.5"
+                android:background="@drawable/card_background"
+                android:elevation="3dp">
+
+                <TextView
+                    android:id="@+id/textView21"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Total Price"
+                    android:textColor="#373b54"
+                    android:textSize="15sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvTotalPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="$ 0"
+                    android:textColor="#000000"
+                    android:textSize="23sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView21" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvAddToCart"
+                android:layout_width="0dp"
+                android:layout_height="65dp"
+                android:layout_margin="8dp"
+                android:layout_weight="0.5"
+                android:background="@drawable/bg_add_cart"
+                android:drawableStart="@drawable/cart"
+                android:drawablePadding="6dp"
+                android:elevation="3dp"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="Add to cart"
+                android:textColor="#ffffff"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
     </RelativeLayout>
 </ScrollView>

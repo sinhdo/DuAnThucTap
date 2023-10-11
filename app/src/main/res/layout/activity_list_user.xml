@@ -20,22 +20,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <SearchView
+        <ImageView
+            android:id="@+id/img_addProduct"
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:src="@drawable/cart"/>
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_user"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:iconifiedByDefault="false"
             android:queryHint="Enter username"
             android:queryBackground="@android:color/transparent"
             android:background="@drawable/bg_search_view"
-          />
+            />
         <ImageButton
             android:id="@+id/btn_add_user"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="15dp"
-            android:src="@drawable/baseline_person_add_24"
+            android:src="@drawable/@drawable/baseline_person_add_24"
             />
-
     </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_marginTop="15dp"

@@ -68,6 +68,34 @@
                         android:text="3"
                         android:textSize="17sp"/>
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Màu: "
+                        android:textSize="17sp"/>
+                    <TextView
+                        android:id="@+id/tv_colorProductCart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="đỏ"
+                        android:textSize="17sp"/>
+                    <TextView
+                        android:layout_marginLeft="40dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Size: "
+                        android:textSize="17sp"/>
+                    <TextView
+                        android:id="@+id/tv_sizeProductCart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Xl"
+                        android:textSize="17sp"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
         <ImageView

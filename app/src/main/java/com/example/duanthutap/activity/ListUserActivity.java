@@ -3,6 +3,7 @@ package com.example.duanthutap.activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +14,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+
+import androidx.appcompat.widget.SearchView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.annotation.SuppressLint;
+
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -27,7 +35,11 @@ import android.widget.Toast;
 
 import com.example.duanthutap.R;
 import com.example.duanthutap.adapter.UserAdapter;
+
 import com.example.duanthutap.database.FirebaseHelper;
+
+import com.example.duanthutap.model.Product;
+
 import com.example.duanthutap.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -40,6 +52,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -54,6 +67,7 @@ public class ListUserActivity extends AppCompatActivity implements UserAdapter.C
     private List<User> list = new ArrayList<>();
     private User user;
     private UserAdapter adapter;
+
     private ImageButton btnAddUser;
     private Dialog dialogUser;
     private AppCompatButton btnSave, btnCancle, btnDelete;
@@ -62,19 +76,40 @@ public class ListUserActivity extends AppCompatActivity implements UserAdapter.C
     private String role;
     private int viTriRole;
 
+    private SearchView searchView;
+
+
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_user);
         recyclerView = findViewById(R.id.ryc_list_user);
+
         btnAddUser = findViewById(R.id.btn_add_user);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
+
+        searchView = findViewById(R.id.search_user);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         adapter = new UserAdapter(list, getApplicationContext(), this);
         recyclerView.setAdapter(adapter);
         CallApiUser();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                //s = searchView.getQuery().toString();
+                performSearch (s);
+                return true;
+            }
+        });
 
         btnAddUser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -382,5 +417,32 @@ public class ListUserActivity extends AppCompatActivity implements UserAdapter.C
         return true;
     }
 
+
+
+    private void performSearch(String query) {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = firebaseDatabase.getReference("user");
+        Query searchQuery = myRef.orderByChild("email").startAt(query).endAt(query + "\uf8ff");
+
+        searchQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                list.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    User user = snapshot.getValue(User.class);
+                    if (user != null) {
+                        list.add(user); // Thêm kết quả tìm kiếm vào danh sách
+                    }
+                }
+                adapter.setData(list);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("loi", "onCancelled: "+databaseError.getMessage());
+            }
+        });
+    }
 
 }

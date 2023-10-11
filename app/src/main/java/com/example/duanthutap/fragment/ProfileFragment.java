@@ -18,14 +18,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.duanthutap.AdminActivity;
-import com.example.duanthutap.MainActivity;
-import com.example.duanthutap.Order.OrderActivity;
+
 import com.example.duanthutap.R;
-import com.example.duanthutap.activity.ChatBoxActivity;
+import com.example.duanthutap.activity.ChangePasswordActivity;
 import com.example.duanthutap.activity.InfoUserActivity;
 import com.example.duanthutap.activity.ListUserActivity;
 import com.example.duanthutap.activity.LoginActivity;
+import com.example.duanthutap.database.FirebaseRole;
+
+
+import com.example.duanthutap.Order.OrderActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -42,7 +45,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private FirebaseUser firebaseUser;
     private TextView tvName;
     private TextView tvEmail;
-    private LinearLayout lnlOrder;
+    private LinearLayout lnlOrder,lnlListUser,lnlchangePass;
     private DatabaseReference mReference;
     private ImageView imgAvatarUsers;
     private LinearLayout idInfoUsers;
@@ -78,18 +81,19 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         tvEmail = (TextView) view.findViewById(R.id.tv_email);
         imgAvatarUsers = (ImageView) view.findViewById(R.id.img_avatarUsers);
         lnlOrder = (LinearLayout) view.findViewById(R.id.lnl_order);
+        lnlchangePass = view.findViewById(R.id.lnl_changePass);
         idInfoUsers = (LinearLayout) view.findViewById(R.id.id_infoUsers);
 
-        btnListUser = (Button) view.findViewById(R.id.btn_list_user);
+        lnlListUser =  view.findViewById(R.id.lnl_listUser);
         lnlOrder = (LinearLayout) view.findViewById(R.id.lnl_order);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         mReference = FirebaseDatabase.getInstance().getReference();
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        String name = sharedPreferences.getString("name","");
+        String name = sharedPreferences.getString("name", "");
         String email = sharedPreferences.getString("email", "");
         String img = sharedPreferences.getString("img", "");
-        if (name.isEmpty()){
+        if (name.isEmpty()) {
             setInfoProfile();
         } else {
             tvName.setText(name);
@@ -105,9 +109,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         setRoleListUser();
         setInfoProfile();
         btnLogout.setOnClickListener(this);
-        btnListUser.setOnClickListener(this);
+        lnlListUser.setOnClickListener(this);
         lnlOrder.setOnClickListener(this);
         idInfoUsers.setOnClickListener(this);
+        lnlchangePass.setOnClickListener(this);
 
     }
 
@@ -138,23 +143,27 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                     // Xử lý trường hợp Fragment chưa được gắn vào Activity
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.d("Loi", "onCancelled: " + error.getMessage());
             }
         });
     }
+
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.btn_log_out) {
             firebaseAuth.signOut();
             startActivity(new Intent(getActivity(), LoginActivity.class));
-        } else if (view.getId()==R.id.btn_list_user) {
+        } else if (view.getId() == R.id.lnl_listUser) {
             startActivity(new Intent(getActivity(), ListUserActivity.class));
         } else if (view.getId() == R.id.lnl_order) {
             startActivity(new Intent(getActivity(), OrderActivity.class));
         } else if (view.getId() == R.id.id_infoUsers) {
             startActivity(new Intent(getActivity(), InfoUserActivity.class));
+        } else if (view.getId() == R.id.lnl_changePass) {
+            startActivity(new Intent(getActivity(), ChangePasswordActivity.class));
         }
     }
 
@@ -169,18 +178,16 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    boolean isAdmin = dataSnapshot.child("role").getValue(Boolean.class);
-                    // Xử lý tùy theo giá trị Boolean (true/false)
+                    boolean isAdmin = FirebaseRole.isUserAdmin(dataSnapshot);
                     if (isAdmin) {
                         // Người dùng là Admin
-                        btnListUser.setVisibility(View.VISIBLE);
+                        lnlListUser.setVisibility(View.VISIBLE);
                     } else {
                         // Người dùng không phải là Admin
-                        btnListUser.setVisibility(View.GONE);
+                        lnlListUser.setVisibility(View.GONE);
                     }
-                }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.d("Loi", "onCancelled: " + databaseError.getMessage());
