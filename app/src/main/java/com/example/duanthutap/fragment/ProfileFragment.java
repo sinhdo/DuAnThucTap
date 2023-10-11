@@ -104,6 +104,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 picasso.load(img).into(imgAvatarUsers);
             }
         }
+        mAuth = FirebaseAuth.getInstance();
 
         setRoleListUser();
         setInfoProfile();
@@ -126,17 +127,21 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 String img = snapshot.child("img").getValue(String.class);
                 tvName.setText(name);
                 tvEmail.setText(email);
-                if (img.equals("")) {
+                if (img.equals("")||img.isEmpty()) {
                     imgAvatarUsers.setImageResource(R.drawable.ic_google);
                 } else {
                     picasso.load(img).into(imgAvatarUsers);
                 }
-                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("name", name);
-                editor.putString("email", email);
-                editor.putString("img", img);
-                editor.apply();
+                if (getActivity() != null) {
+                    SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("name", name);
+                    editor.putString("email", email);
+                    editor.putString("img", img);
+                    editor.apply();
+                } else {
+                    // Xử lý trường hợp Fragment chưa được gắn vào Activity
+                }
             }
 
             @Override
