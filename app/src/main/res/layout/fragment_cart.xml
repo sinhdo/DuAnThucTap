@@ -25,11 +25,51 @@
                 android:textColor="#ff3d00"
                 android:textSize="25sp"
                 android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Địa chỉ nhận hàng"
+                android:textColor="#201F1F"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcv_cart"
                 android:layout_width="match_parent"
                 android:layout_height="450dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_margin="20dp"
+                android:weightSum="6"
+                android:gravity="center"
+                android:background="@drawable/card_background"
+                android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="3"
+                        android:layout_height="wrap_content"
+                        android:text="Phương thức thanh toán"
+                        android:textColor="@color/black"
+                        android:textSize="16dp" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content"
+                        android:text="Thanh toán khi nhận hàng"
+                        android:textColor="@color/black"
+                        android:textSize="16dp" />
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_arrow_right" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linear_layout"
@@ -100,35 +140,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="3"
                         android:text="$ 0"
-                        android:textColor="#373b54"
-                        android:textSize="18dp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_weight="6"
-                    android:orientation="horizontal">\
-
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        android:text="Phương thức : "
-                        android:textColor="#373b54"
-                        android:textSize="18dp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        android:text="Chọn PTTT"
                         android:textColor="#373b54"
                         android:textSize="18dp"
                         android:textStyle="bold" />
@@ -220,7 +231,7 @@
                 android:layout_marginBottom="20dp"
                 android:backgroundTint="#F8473A"
                 android:padding="15dp"
-                android:text="Mua hàng" />
+                android:text="Thanh toán" />
         </LinearLayout>
     </RelativeLayout>
 </ScrollView>
