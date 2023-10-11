@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 
 import com.example.duanthutap.R;
+import com.example.duanthutap.activity.ChangePasswordActivity;
 import com.example.duanthutap.activity.InfoUserActivity;
 import com.example.duanthutap.activity.ListUserActivity;
 import com.example.duanthutap.activity.LoginActivity;
@@ -44,7 +45,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private FirebaseUser firebaseUser;
     private TextView tvName;
     private TextView tvEmail;
-    private LinearLayout lnlOrder,lnlListUser;
+    private LinearLayout lnlOrder,lnlListUser,lnlchangePass;
     private DatabaseReference mReference;
     private ImageView imgAvatarUsers;
     private LinearLayout idInfoUsers;
@@ -80,6 +81,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         tvEmail = (TextView) view.findViewById(R.id.tv_email);
         imgAvatarUsers = (ImageView) view.findViewById(R.id.img_avatarUsers);
         lnlOrder = (LinearLayout) view.findViewById(R.id.lnl_order);
+        lnlchangePass = view.findViewById(R.id.lnl_changePass);
         idInfoUsers = (LinearLayout) view.findViewById(R.id.id_infoUsers);
 
         lnlListUser =  view.findViewById(R.id.lnl_listUser);
@@ -109,6 +111,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         lnlListUser.setOnClickListener(this);
         lnlOrder.setOnClickListener(this);
         idInfoUsers.setOnClickListener(this);
+        lnlchangePass.setOnClickListener(this);
 
     }
 
@@ -154,6 +157,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             startActivity(new Intent(getActivity(), OrderActivity.class));
         } else if (view.getId() == R.id.id_infoUsers) {
             startActivity(new Intent(getActivity(), InfoUserActivity.class));
+        } else if (view.getId() == R.id.lnl_changePass) {
+            startActivity(new Intent(getActivity(), ChangePasswordActivity.class));
         }
     }
 

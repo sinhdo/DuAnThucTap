@@ -6,5 +6,6 @@
     <color name="colorNormal">#C6C4C4</color> <!-- Màu nền mặc định -->
     <color name="colorPressed">#4FC6FC</color> <!-- Màu nền khi được bấm -->
     <color name="colorRed">#FB075A</color>
+    <color name="mauve">#F8F4F4</color>
 
 </resources>
