@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,7 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.duanthutap.R;
+import com.example.duanthutap.model.Product;
 import com.example.duanthutap.model.User;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -20,12 +23,18 @@ import java.util.List;
 public class UserAdapter   extends RecyclerView.Adapter<UserAdapter.MyViewHoder>{
     private List<User> list;
     private Context context;
+   private Callback callback;
 
-    public UserAdapter(List<User> list, Context context) {
+    public UserAdapter(List<User> list, Context context,Callback callback) {
         this.list = list;
         this.context = context;
-
+        this.callback = callback;
     }
+    public interface Callback{
+        void itemUserInfo(User user);
+    }
+
+
 
     @NonNull
     @Override
@@ -47,10 +56,18 @@ public class UserAdapter   extends RecyclerView.Adapter<UserAdapter.MyViewHoder>
             Picasso.get().load(user.getImg()).into(holder.img);
         }
 
-//        holder.id.setText("ID : "+user.getId());
+        holder.img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (callback != null) {
+                    callback.itemUserInfo(user);
+                }
+            }
+        });
         holder.name.setText("Name :"+user.getName());
         holder.email.setText("Email : "+user.getEmail());
         holder.phonenumber.setText("Phone : "+user.getPhoneNumber());
+
     }
 
     @Override
@@ -68,7 +85,6 @@ public class UserAdapter   extends RecyclerView.Adapter<UserAdapter.MyViewHoder>
             super(itemView);
             img=itemView.findViewById(R.id.user_image);
             name=itemView.findViewById(R.id.user_name);
-            id=itemView.findViewById(R.id.user_id);
             email=itemView.findViewById(R.id.user_email);
             phonenumber=itemView.findViewById(R.id.user_phone_number);
 

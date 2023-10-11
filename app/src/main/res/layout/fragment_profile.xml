@@ -113,15 +113,18 @@
 
     <Button
         android:id="@+id/btn_list_user"
-        android:layout_width="250dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/light_blue"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
         android:text="Danh sách người dùng"
         android:textAllCaps="false"
         android:textSize="16dp"
-        android:visibility="gone" />
+        android:visibility="gone"
+       />
 
     <Button
         android:id="@+id/btn_list_product"
