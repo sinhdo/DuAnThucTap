@@ -3,8 +3,10 @@ package com.example.duanthutap.fragment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -28,14 +30,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.duanthutap.MainActivity;
 import com.example.duanthutap.R;
 import com.example.duanthutap.activity.AddproductActivity;
+import com.example.duanthutap.activity.ShowListLocationActivity;
 import com.example.duanthutap.adapter.CartAdapter;
 import com.example.duanthutap.adapter.ProductAdapter;
 import com.example.duanthutap.model.Location;
@@ -68,10 +73,15 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
     private TextView totalPriceItem;
     private TextView totalPriceCart;
     private TextView tvPayment;
+    private LinearLayout lnlShowLocation;
+    private TextView tvName;
+    private TextView tvPhone;
     private TextView tvLocation;
+    private TextView tvShowLocation;
     RecyclerView recycler_listproductsadd;
     CartAdapter cartAdapter;
     private FirebaseUser firebaseUser;
+    private RelativeLayout rlAddress;
     private int tax = 5;
     private ArrayList<ProductsAddCart> list = new ArrayList<>();
 
@@ -104,9 +114,12 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
         getListProductAddCart();
         cartAdapter = new CartAdapter(getActivity(), list, tv_total, this);
         recycler_listproductsadd.setAdapter(cartAdapter);
-        popupGetListLocation();
         poppuGetListPayment();
         sumPriceProduct();
+        setLocation();
+        rlAddress.setOnClickListener(view1 -> {
+            startActivity(new Intent(getActivity(), ShowListLocationActivity.class));
+        });
     }
 
     private void GetView(View view) {
@@ -116,7 +129,13 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
         totalPriceItem = (TextView) view.findViewById(R.id.total_price_item);
         totalPriceCart = (TextView) view.findViewById(R.id.total_price_cart);
         tvPayment = (TextView) view.findViewById(R.id.tv_payment);
+        rlAddress = (RelativeLayout) view.findViewById(R.id.rl_address);
+        lnlShowLocation = (LinearLayout) view.findViewById(R.id.lnl_showLocation);
+        tvName = (TextView) view.findViewById(R.id.tv_name);
+        tvPhone = (TextView) view.findViewById(R.id.tv_phone);
         tvLocation = (TextView) view.findViewById(R.id.tv_location);
+        tvShowLocation = (TextView) view.findViewById(R.id.tv_showLocation);
+
     }
 
     @Override
@@ -147,7 +166,6 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.cancel();
-                ;
             }
         });
         AlertDialog alertDialog = aBuilder.create();
@@ -231,48 +249,6 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
             popupMenu.show();
         });
     }
-
-    private void popupGetListLocation(){
-        tvLocation.setOnClickListener(view -> {
-            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-            firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-            String id_user = firebaseUser.getUid();
-            DatabaseReference myReference = firebaseDatabase.getReference("user").child(id_user).child("infoLocation");
-            myReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    List<String> list1 = new ArrayList<>();
-                    List<String> listId = new ArrayList<>();
-                    for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
-                        Location location = dataSnapshot.getValue(Location.class);
-                        list1.add(location.getLocation());
-                        //Lấy id
-                        listId.add(location.getId());
-                    }
-                    PopupMenu popupMenu = new PopupMenu(getActivity(), tvLocation);
-                    for (String address : list1) {
-                        popupMenu.getMenu().add(address);
-                    }
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            String selectedAddress = item.getTitle().toString();
-                            tvLocation.setText(selectedAddress);
-                            // Xử lý khi chọn địa chỉ từ danh sách
-                            return true;
-                        }
-                    });
-                    popupMenu.show();
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.d("Loi", "onCancelled: " + error.getMessage());
-                }
-            });
-        });
-    }
-
     private double caculatorTotalPrice(List<ProductsAddCart> productList) {
         double totalPrice = 0;
         for (ProductsAddCart product : productList) {
@@ -281,9 +257,28 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
         return totalPrice;
     }
 
+    private void setLocation(){
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("PrefLocation", Context.MODE_PRIVATE);
+        String name = sharedPreferences.getString("name", "");
+        String phone = sharedPreferences.getString("phone", "");
+        String location = sharedPreferences.getString("location", "");
+
+        if (name.isEmpty()){
+            lnlShowLocation.setVisibility(View.GONE);
+            tvShowLocation.setVisibility(View.VISIBLE);
+        } else {
+            lnlShowLocation.setVisibility(View.VISIBLE);
+            tvShowLocation.setVisibility(View.GONE);
+            tvName.setText(name);
+            tvPhone.setText(phone);
+            tvLocation.setText(location);
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         sumPriceProduct();
+        setLocation();
     }
 }
