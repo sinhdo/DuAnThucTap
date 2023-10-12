@@ -1,5 +1,7 @@
 package com.example.duanthutap.model;
 
+import java.util.List;
+
 public class User {
     private String id;
     private String name;
@@ -9,8 +11,9 @@ public class User {
     private String address;
     private String img;
     private Boolean role;
+    private List<Location> location;
 
-    public User(String id, String name, String email, String password, String phoneNumber, String address, String img, Boolean role) {
+    public User(String id, String name, String email, String password, String phoneNumber, String address, String img, Boolean role,List<Location> location) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -19,6 +22,7 @@ public class User {
         this.address = address;
         this.img = img;
         this.role = role;
+        this.location = location;
     }
 
     public User() {
@@ -86,5 +90,13 @@ public class User {
 
     public void setRole(Boolean role) {
         this.role = role;
+    }
+
+    public List<Location> getLocation() {
+        return location;
+    }
+
+    public void setLocation(List<Location> location) {
+        this.location = location;
     }
 }

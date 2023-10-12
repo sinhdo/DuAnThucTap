@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -27,6 +28,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +38,7 @@ import com.example.duanthutap.R;
 import com.example.duanthutap.activity.AddproductActivity;
 import com.example.duanthutap.adapter.CartAdapter;
 import com.example.duanthutap.adapter.ProductAdapter;
+import com.example.duanthutap.model.Location;
 import com.example.duanthutap.model.Product;
 import com.example.duanthutap.model.ProductsAddCart;
 import com.example.duanthutap.model.User;
@@ -64,6 +67,8 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
     private TextView taxPrice;
     private TextView totalPriceItem;
     private TextView totalPriceCart;
+    private TextView tvPayment;
+    private TextView tvLocation;
     RecyclerView recycler_listproductsadd;
     CartAdapter cartAdapter;
     private FirebaseUser firebaseUser;
@@ -99,7 +104,8 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
         getListProductAddCart();
         cartAdapter = new CartAdapter(getActivity(), list, tv_total, this);
         recycler_listproductsadd.setAdapter(cartAdapter);
-
+        popupGetListLocation();
+        poppuGetListPayment();
         sumPriceProduct();
     }
 
@@ -109,6 +115,8 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
         taxPrice = (TextView) view.findViewById(R.id.tax_price);
         totalPriceItem = (TextView) view.findViewById(R.id.total_price_item);
         totalPriceCart = (TextView) view.findViewById(R.id.total_price_cart);
+        tvPayment = (TextView) view.findViewById(R.id.tv_payment);
+        tvLocation = (TextView) view.findViewById(R.id.tv_location);
     }
 
     @Override
@@ -201,6 +209,67 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.d("Loi", "onCancelled: " + error.getMessage());
             }
+        });
+    }
+
+    private void poppuGetListPayment(){
+        String [] listPayment ={"Thanh toán khi nhận hàng","Thanh toán qua thẻ ngân hàng"};
+        tvPayment.setOnClickListener(view -> {
+            PopupMenu popupMenu = new PopupMenu(getActivity(), tvPayment);
+            for (String address : listPayment) {
+                popupMenu.getMenu().add(address);
+            }
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    String selectedAddress = item.getTitle().toString();
+                    tvPayment.setText(selectedAddress);
+                    // Xử lý khi chọn địa chỉ từ danh sách
+                    return true;
+                }
+            });
+            popupMenu.show();
+        });
+    }
+
+    private void popupGetListLocation(){
+        tvLocation.setOnClickListener(view -> {
+            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+            firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            String id_user = firebaseUser.getUid();
+            DatabaseReference myReference = firebaseDatabase.getReference("user").child(id_user).child("infoLocation");
+            myReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    List<String> list1 = new ArrayList<>();
+                    List<String> listId = new ArrayList<>();
+                    for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
+                        Location location = dataSnapshot.getValue(Location.class);
+                        list1.add(location.getLocation());
+                        //Lấy id
+                        listId.add(location.getId());
+                    }
+                    PopupMenu popupMenu = new PopupMenu(getActivity(), tvLocation);
+                    for (String address : list1) {
+                        popupMenu.getMenu().add(address);
+                    }
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            String selectedAddress = item.getTitle().toString();
+                            tvLocation.setText(selectedAddress);
+                            // Xử lý khi chọn địa chỉ từ danh sách
+                            return true;
+                        }
+                    });
+                    popupMenu.show();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.d("Loi", "onCancelled: " + error.getMessage());
+                }
+            });
         });
     }
 

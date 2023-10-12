@@ -24,9 +24,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     private List<Product> mList;
     private Context context;
     private Callback callback;
-    private FirebaseUser firebaseUser;
-    private DatabaseReference mReference;
-    private FragmentManager fragmentManager;
     public ProductAdapter(Context context,List<Product> mList, Callback callback) {
         this.context=context;
         this.mList = mList;
