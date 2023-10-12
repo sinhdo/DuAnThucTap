@@ -45,7 +45,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -70,7 +73,7 @@ public class ListUserActivity extends AppCompatActivity implements UserAdapter.C
 
     private ImageButton btnAddUser;
     private Dialog dialogUser;
-    private AppCompatButton btnSave, btnCancle, btnDelete;
+    private AppCompatButton btnSave, btnCancle;
     private TextInputEditText edName, edEmail, edPhone, edAddress, edPass, edRepass;
     private Spinner spinnerRole;
     private String role;
@@ -106,7 +109,7 @@ public class ListUserActivity extends AppCompatActivity implements UserAdapter.C
             @Override
             public boolean onQueryTextChange(String s) {
                 //s = searchView.getQuery().toString();
-                performSearch (s);
+                performSearch(s);
                 return true;
             }
         });
@@ -170,7 +173,6 @@ public class ListUserActivity extends AppCompatActivity implements UserAdapter.C
         btnAddUser = dialogUser.findViewById(R.id.btn_add_user);
         btnCancle = dialogUser.findViewById(R.id.btnCancle);
         btnSave = (AppCompatButton) dialogUser.findViewById(R.id.btnSave);
-        btnDelete = dialogUser.findViewById(R.id.btnDelete);
         spinnerRole = dialogUser.findViewById(R.id.spnRole);
 
 
@@ -182,7 +184,7 @@ public class ListUserActivity extends AppCompatActivity implements UserAdapter.C
         spinnerRole.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    role =arrayAdapterRole.getItem(i).toString();
+                role = arrayAdapterRole.getItem(i).toString();
             }
 
             @Override
@@ -197,14 +199,6 @@ public class ListUserActivity extends AppCompatActivity implements UserAdapter.C
                 dialogUser.dismiss();
             }
         });
-        btnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                deleteUser(user.getId());
-                dialogUser.dismiss();
-            }
-        });
-
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -216,7 +210,7 @@ public class ListUserActivity extends AppCompatActivity implements UserAdapter.C
                 String repassword = edRepass.getText().toString().trim();
 
 
-                if (validateRegistration(name, email, phone, password, repassword) || validateRegistration(name, email, phone, user.getPassword(), user.getPassword())) {
+                if (validateRegistration(name, email, phone, password, repassword)) {
                     if (type == 0) {
                         firebaseAuth.createUserWithEmailAndPassword(email, password)
                                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -233,9 +227,9 @@ public class ListUserActivity extends AppCompatActivity implements UserAdapter.C
                                             user.setPhoneNumber(phone);
                                             user.setPassword(password);
                                             user.setAddress(address);
-                                            if (role=="ADMIN"){
+                                            if (role == "ADMIN") {
                                                 user.setRole(true);
-                                            }else {
+                                            } else {
                                                 user.setRole(false);
                                             }
                                             usersRef = firebaseHelper.getUsersRef();
@@ -269,17 +263,19 @@ public class ListUserActivity extends AppCompatActivity implements UserAdapter.C
         if (type == 1) {
             edName.setText(user.getName());
             edEmail.setText(user.getEmail());
+            edEmail.setEnabled(false);
             edPhone.setText(user.getPhoneNumber());
             edAddress.setText(user.getAddress());
+            edPass.setText(user.getPassword());
+            edRepass.setText(user.getPassword());
             edPass.setVisibility(View.GONE);
             edRepass.setVisibility(View.GONE);
             btnSave.setText("UPDATE");
-            btnDelete.setVisibility(View.VISIBLE);
-                if (user.getRole()==true){
-                    spinnerRole.setSelection(0);
-                }else {
-                    spinnerRole.setSelection(1);
-                }
+            if (user.getRole() == true) {
+                spinnerRole.setSelection(0);
+            } else {
+                spinnerRole.setSelection(1);
+            }
         }
         if (!isFinishing()) {
             dialogUser.show();
@@ -310,24 +306,6 @@ public class ListUserActivity extends AppCompatActivity implements UserAdapter.C
         } else {
             Toast.makeText(this, "ID NULL", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private void deleteUser(String id) {
-
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = firebaseDatabase.getReference("user");
-        myRef.child(id).removeValue(new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                if (error == null) {
-                    Toast.makeText(getApplicationContext(), "Xóa thành công", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Xảy ra lỗi khi lưu sản phẩm
-                    Toast.makeText(getApplicationContext(), "Xóa thất bại", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
     }
 
 
@@ -370,7 +348,7 @@ public class ListUserActivity extends AppCompatActivity implements UserAdapter.C
             return false;
         }
         if (password.length() < 6) {
-            edPass.setError("Mật khẩu phải hơn 6 kí tự");
+            edPass.setError("Vui lòng nhập mật khẩu hơn 6 kí tự");
             return false;
         }
         if (!password.matches(repass)) {
@@ -379,44 +357,6 @@ public class ListUserActivity extends AppCompatActivity implements UserAdapter.C
         }
         return true;
     }
-
-    private boolean validateRegistration2(String username, String email, String phone) {
-        String nameForm1 = "^[a-zA-Z]+$";
-        String nameForm2 = "^[a-zA-Z]+( [a-zA-Z]+)*$";
-
-        if (username.isEmpty() || username == null) {
-            edName.setError("Vui lòng nhập tên");
-            return false;
-        }
-        if (!username.matches(nameForm1) || !username.matches(nameForm2)) {
-            edName.setError("Tên không đúng định dạng!");
-            return false;
-        }
-        if (TextUtils.isEmpty(email)) {
-            edEmail.setError("Vui lòng nhập email");
-            return false;
-        }
-
-        String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
-        if (!email.matches(emailRegex)) {
-            edEmail.setError("Email không hợp lệ");
-            return false;
-        }
-
-
-        if (TextUtils.isEmpty(phone)) {
-            edPhone.setError("Vui lòng nhập số điện thoại");
-            return false;
-        }
-
-        String phoneRegex = "^[0-9]{10}$";
-        if (!phone.matches(phoneRegex)) {
-            edPhone.setError("Số điện thoại không hợp lệ");
-            return false;
-        }
-        return true;
-    }
-
 
 
     private void performSearch(String query) {
@@ -440,7 +380,7 @@ public class ListUserActivity extends AppCompatActivity implements UserAdapter.C
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("loi", "onCancelled: "+databaseError.getMessage());
+                Log.d("loi", "onCancelled: " + databaseError.getMessage());
             }
         });
     }

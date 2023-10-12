@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="10dp"
+    android:background="#F4F0CB"
     tools:context=".activity.ListUserActivity">
     <TextView
         android:layout_width="match_parent"
@@ -17,6 +18,7 @@
         android:background="#F87401"
         android:gravity="center"/>
     <LinearLayout
+        android:layout_marginVertical="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -41,7 +43,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="15dp"
-            android:src="@drawable/@drawable/baseline_person_add_24"
+            android:src="@drawable/baseline_person_add_24"
             />
     </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
