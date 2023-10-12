@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.example.duanthutap.R;
 import com.example.duanthutap.activity.ChangePasswordActivity;
+import com.example.duanthutap.activity.InfoLocationActivity;
 import com.example.duanthutap.activity.InfoUserActivity;
 import com.example.duanthutap.activity.ListUserActivity;
 import com.example.duanthutap.activity.LoginActivity;
@@ -45,7 +46,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private FirebaseUser firebaseUser;
     private TextView tvName;
     private TextView tvEmail;
-    private LinearLayout lnlOrder,lnlListUser,lnlchangePass;
+    private LinearLayout lnlOrder,lnlListUser,lnlchangePass, lnlAddAddress;
     private DatabaseReference mReference;
     private ImageView imgAvatarUsers;
     private LinearLayout idInfoUsers;
@@ -83,6 +84,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         lnlOrder = (LinearLayout) view.findViewById(R.id.lnl_order);
         lnlchangePass = view.findViewById(R.id.lnl_changePass);
         idInfoUsers = (LinearLayout) view.findViewById(R.id.id_infoUsers);
+        lnlAddAddress = (LinearLayout) view.findViewById(R.id.lnl_infoAddress);
 
         lnlListUser =  view.findViewById(R.id.lnl_listUser);
         lnlOrder = (LinearLayout) view.findViewById(R.id.lnl_order);
@@ -113,7 +115,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         lnlOrder.setOnClickListener(this);
         idInfoUsers.setOnClickListener(this);
         lnlchangePass.setOnClickListener(this);
-
+        lnlAddAddress.setOnClickListener(this);
     }
 
     private void setInfoProfile() {
@@ -164,6 +166,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             startActivity(new Intent(getActivity(), InfoUserActivity.class));
         } else if (view.getId() == R.id.lnl_changePass) {
             startActivity(new Intent(getActivity(), ChangePasswordActivity.class));
+        } else if (view.getId() == R.id.lnl_infoAddress) {
+            startActivity(new Intent(getActivity(), InfoLocationActivity.class));
         }
     }
 
