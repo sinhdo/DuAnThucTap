@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.duanthutap.R;
 import com.example.duanthutap.databinding.ActivityAddLocationBinding;
@@ -38,9 +39,31 @@ public class AddLocationActivity extends AppCompatActivity implements View.OnCli
             String phone = binding.edPhone.getText().toString().trim();
             String location = binding.edLocation.getText().toString().trim();
             String newKey = myRef.push().getKey();
-            Location location1 = new Location(newKey,name,phone,location);
-            myRef.child(newKey).setValue(location1);
-            finish();
+            if (checkValidate(name, phone, location)){
+                Location location1 = new Location(newKey,name,phone,location);
+                myRef.child(newKey).setValue(location1);
+                finish();
+            }
         }
+    }
+    private boolean checkValidate(String name, String phone, String location){
+        if (name.isEmpty() || phone.isEmpty() || location.isEmpty()){
+            Toast.makeText(this, "Name, Phone, Location không được để trống!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        String phoneForm = "^0\\d{9}$";
+        String nameForm1 = "[a-zA-Z\\s]+";
+
+        if (!name.matches(nameForm1)){
+            Toast.makeText(this, "Tên không đúng định dạng!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (!phone.matches(phoneForm)){
+            Toast.makeText(this, "Số điện thoại không đúng định dạng!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
     }
 }

@@ -40,6 +40,12 @@
             android:name=".activity.InfoUserActivity"
             android:exported="false" />
         <activity
+            android:name=".activity.InfoLocationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.AddLocationActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.AddproductActivity"
             android:exported="false" />
         <activity

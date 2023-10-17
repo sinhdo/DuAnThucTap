@@ -50,14 +50,18 @@
                 android:layout_height="wrap_content"
                 android:text="Nguyễn Văn A"
                 android:textColor="@color/black"
-                android:textSize="18dp" />
+                android:textSize="18dp"
+                android:maxLines="1"
+                android:ellipsize="end"/>
 
             <TextView
                 android:id="@+id/tv_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="anguyenvan@gmail.com"
-                android:textSize="16dp" />
+                android:textSize="16dp"
+                android:maxLines="1"
+                android:ellipsize="end"/>
         </LinearLayout>
 
     </LinearLayout>
