@@ -126,13 +126,15 @@ public class InfoLocationActivity extends AppCompatActivity implements LocationA
             FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
             firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
             String id_user = firebaseUser.getUid();
-            DatabaseReference myRef = firebaseDatabase.getReference("user").child(id_user).child("infoLocation");
-            Map<String, Object> updates = new HashMap<>();
-            updates.put("name", name);
-            updates.put("phone", phone);
-            updates.put("location", location);
-            myRef.child(address.getId()).updateChildren(updates);
-            dialog.dismiss();
+            if (checkValidate(name,phone,location)){
+                DatabaseReference myRef = firebaseDatabase.getReference("user").child(id_user).child("infoLocation");
+                Map<String, Object> updates = new HashMap<>();
+                updates.put("name", name);
+                updates.put("phone", phone);
+                updates.put("location", location);
+                myRef.child(address.getId()).updateChildren(updates);
+                dialog.dismiss();
+            }
         });
 
         imgBack.setOnClickListener(view -> {
@@ -178,6 +180,27 @@ public class InfoLocationActivity extends AppCompatActivity implements LocationA
         } else if (view.getId() == R.id.img_addAddress) {
             startActivity(new Intent(InfoLocationActivity.this, AddLocationActivity.class));
         }
+    }
+
+    private boolean checkValidate(String name, String phone, String location){
+        if (name.isEmpty() || phone.isEmpty() || location.isEmpty()){
+            Toast.makeText(this, "Name, Phone, Location không được để trống!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        String phoneForm = "^0\\d{9}$";
+        String nameForm1 = "[a-zA-Z\\s]+";
+
+        if (!name.matches(nameForm1)){
+            Toast.makeText(this, "Tên không đúng định dạng!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (!phone.matches(phoneForm)){
+            Toast.makeText(this, "Số điện thoại không đúng định dạng!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
     }
 
     @Override

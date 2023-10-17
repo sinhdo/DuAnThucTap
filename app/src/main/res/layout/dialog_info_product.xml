@@ -70,12 +70,14 @@
             android:textStyle="bold" />
         <LinearLayout
             android:id="@+id/lnl_quantity"
-            android:layout_width="wrap_content"
+            android:layout_width="115dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_below="@+id/tv_name_product"
             android:layout_marginStart="150dp"
-            android:background="@drawable/gray_bar">
+            android:layout_marginTop="10dp"
+            android:background="@drawable/gray_bar"
+            android:padding="5dp">
 
             <ImageView
                 android:id="@+id/img_minus"
@@ -88,7 +90,6 @@
                 android:layout_width="36dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/card_background"
                 android:text="1"
