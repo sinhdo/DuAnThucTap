@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Order.DeliveryFragment"
-    android:background="#FFEB3B">
-
-
+    android:background="#DDDDDD">
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcv_delivery"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </FrameLayout>
