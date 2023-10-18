@@ -157,6 +157,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         if (view.getId() == R.id.btn_log_out) {
             firebaseAuth.signOut();
+            getActivity().finish();
             startActivity(new Intent(getActivity(), LoginActivity.class));
         } else if (view.getId() == R.id.lnl_listUser) {
             startActivity(new Intent(getActivity(), ListUserActivity.class));

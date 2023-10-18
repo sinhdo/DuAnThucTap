@@ -22,6 +22,12 @@
             android:name=".activity.ShowListLocationActivity"
             android:exported="false" />
         <activity
+            android:name=".activity.AddLocationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.InfoLocationActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.UpdateProductActivity"
             android:exported="false" />
         <activity

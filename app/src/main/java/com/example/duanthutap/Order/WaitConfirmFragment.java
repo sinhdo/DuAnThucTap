@@ -58,18 +58,12 @@ public class WaitConfirmFragment extends Fragment implements OderAdapter.Callbac
     private OderAdapter oderAdapter;
     private ArrayList<Oder> list = new ArrayList<>();
     private FirebaseUser firebaseUser;
-    private boolean isAdmin;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         rcvConfirm = view.findViewById(R.id.rcv_confirm);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         CheckRoleUser();
-        if (isAdmin){
-            GetAllData();
-        }else{
-            GetDataConfirmList();
-        }
         rcvConfirm.setLayoutManager(new LinearLayoutManager(getContext()));
         oderAdapter = new OderAdapter(getContext(),list,this);
         rcvConfirm.setAdapter(oderAdapter);
@@ -133,7 +127,33 @@ public class WaitConfirmFragment extends Fragment implements OderAdapter.Callbac
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    isAdmin = Boolean.TRUE.equals(dataSnapshot.child("role").getValue(Boolean.class));
+                    boolean isAdmin = Boolean.TRUE.equals(dataSnapshot.child("role").getValue(Boolean.class));
+                    if (isAdmin){
+                        GetAllData();
+                    }else{
+                        GetDataConfirmList();
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("Error", "OnCancelled: " + databaseError.getMessage());
+            }
+        });
+    }
+    private void CheckRoleUserFunction(Oder oder){
+        String id = firebaseUser.getUid();
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("user").child(id);
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    boolean isAdmin = Boolean.TRUE.equals(dataSnapshot.child("role").getValue(Boolean.class));
+                    if (isAdmin) {
+                        dialogForAdmin(oder);
+                    } else {
+                        dialogForUser(oder);
+                    }
                 }
             }
             @Override
@@ -206,10 +226,6 @@ public class WaitConfirmFragment extends Fragment implements OderAdapter.Callbac
 
     @Override
     public void logic(Oder oder) {
-        if (isAdmin) {
-            dialogForAdmin(oder);
-        } else {
-            dialogForUser(oder);
-        }
+        CheckRoleUserFunction(oder);
     }
 }
