@@ -46,6 +46,7 @@ import com.example.duanthutap.activity.ShowListLocationActivity;
 import com.example.duanthutap.adapter.CartAdapter;
 import com.example.duanthutap.adapter.ProductAdapter;
 import com.example.duanthutap.model.Location;
+import com.example.duanthutap.model.Oder;
 import com.example.duanthutap.model.Product;
 import com.example.duanthutap.model.ProductsAddCart;
 import com.example.duanthutap.model.User;
@@ -64,6 +65,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -91,6 +93,7 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
     CartAdapter cartAdapter;
     private FirebaseUser firebaseUser;
     private RelativeLayout rlAddress;
+    private ProductsAddCart product;
     private int tax = 5;
     private ArrayList<ProductsAddCart> list = new ArrayList<>();
 
@@ -129,6 +132,35 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
         rlAddress.setOnClickListener(view1 -> {
             startActivity(new Intent(getActivity(), ShowListLocationActivity.class));
         });
+        btn_pay.setOnClickListener(view1 -> {
+            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = firebaseDatabase.getReference("list_oder");
+            String newKey = myRef.push().getKey();
+            String id_user = firebaseUser.getUid();
+            String name = product.getName_product();
+            String image = product.getImage_product();
+            String total = totalPriceCart.getText().toString();
+            String date = new Date().toString();
+            String address = tvLocation.getText().toString();
+            String phone_number = tvPhone.getText().toString();
+            String status = "delivery";
+            Oder oder = new Oder(newKey,id_user,name,image,Double.parseDouble(total),date,address,phone_number,status);
+            On_Create_Bill(oder);
+        });
+    }
+    private void On_Create_Bill(Oder oder) {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = firebaseDatabase.getReference("list_oder");
+        String id = oder.getId();
+
+        myRef.child(id).setValue(oder, (error, ref) -> {
+           if (error == null){
+               Toast.makeText(getContext(), "Thành công add bill", Toast.LENGTH_SHORT).show();
+           }else {
+               // Xảy ra lỗi khi lưu sản phẩm
+               Toast.makeText(getContext(), "Lỗi khi lưu sản phẩm vào Realtime Database", Toast.LENGTH_SHORT).show();
+           }
+        });
     }
 
     private void GetView(View view) {
@@ -144,7 +176,6 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
         tvPhone = (TextView) view.findViewById(R.id.tv_phone);
         tvLocation = (TextView) view.findViewById(R.id.tv_location);
         tvShowLocation = (TextView) view.findViewById(R.id.tv_showLocation);
-
     }
 
     @Override
@@ -417,9 +448,8 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
                 if (list != null) {
                     list.clear();
                 }
-
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    ProductsAddCart product = dataSnapshot.getValue(ProductsAddCart.class);
+                    product = dataSnapshot.getValue(ProductsAddCart.class);
                     list.add(product);
                 }
                 cartAdapter.notifyDataSetChanged();
@@ -453,7 +483,7 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
                     double totalAllProduct = caculatorTotalPrice(list);
                     double totalCart = totalAllProduct + tax;
                     totalPriceItem.setText("$ " + totalAllProduct);
-                    totalPriceCart.setText("$ " + totalCart);
+                    totalPriceCart.setText(String.valueOf(totalCart));
                     taxPrice.setText("$ " + tax);
                 }
             }
