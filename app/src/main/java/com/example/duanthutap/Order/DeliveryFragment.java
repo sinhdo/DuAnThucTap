@@ -52,24 +52,16 @@ public class DeliveryFragment extends Fragment implements OderAdapter.Callback{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_delivery, container, false);
-
-
     }
     private RecyclerView rcvDelivery;
     private OderAdapter oderAdapter;
     private ArrayList<Oder> list = new ArrayList<>();
     private FirebaseUser firebaseUser;
-    private boolean isAdmin;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         rcvDelivery = (RecyclerView) view.findViewById(R.id.rcv_delivery);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         CheckRoleUser();
-        if (isAdmin){
-            GetAllData();
-        }else{
-            GetDataDeliveryList();
-        }
         rcvDelivery.setLayoutManager(new LinearLayoutManager(getContext()));
         oderAdapter = new OderAdapter(getContext(),list,this);
         rcvDelivery.setAdapter(oderAdapter);
@@ -81,7 +73,33 @@ public class DeliveryFragment extends Fragment implements OderAdapter.Callback{
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    isAdmin = Boolean.TRUE.equals(dataSnapshot.child("role").getValue(Boolean.class));
+                    boolean isAdmin = dataSnapshot.child("role").getValue(Boolean.class);
+                    if (isAdmin){
+                        GetAllData();
+                    }else{
+                        GetDataDeliveryList();
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("Error", "OnCancelled: " + databaseError.getMessage());
+            }
+        });
+    }
+    public void CheckRoleUserForFunction(Oder oder){
+        String id = firebaseUser.getUid();
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("user").child(id);
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    boolean isAdmin = dataSnapshot.child("role").getValue(Boolean.class);
+                    if (isAdmin) {
+                        dialogForAdmin(oder);
+                    } else {
+                        dialogForUser(oder);
+                    }
                 }
             }
             @Override
@@ -118,7 +136,6 @@ public class DeliveryFragment extends Fragment implements OderAdapter.Callback{
     private void GetDataDeliveryList() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         String id_user = firebaseUser.getUid();
-        Toast.makeText(getActivity(), "id:"+id_user, Toast.LENGTH_LONG).show();
         DatabaseReference myReference = firebaseDatabase.getReference("list_oder");
 
         myReference.orderByChild("status").equalTo("on_delivery").addValueEventListener(new ValueEventListener() {
@@ -186,10 +203,6 @@ public class DeliveryFragment extends Fragment implements OderAdapter.Callback{
     }
 
     public void logic(Oder oder) {
-        if (isAdmin) {
-            dialogForAdmin(oder);
-        } else {
-            dialogForUser(oder);
-        }
+        CheckRoleUserForFunction(oder);
     }
 }

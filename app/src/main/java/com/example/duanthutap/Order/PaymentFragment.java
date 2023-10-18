@@ -58,18 +58,11 @@ public class PaymentFragment extends Fragment implements OderAdapter.Callback{
     private OderAdapter oderAdapter;
     private ArrayList<Oder> list = new ArrayList<>();
     private FirebaseUser firebaseUser;
-    private boolean isAdmin;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         rcvDone = (RecyclerView) view.findViewById(R.id.rcv_done);
-        rcvDone = view.findViewById(R.id.rcv_confirm);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         CheckRoleUser();
-        if (isAdmin){
-            GetAllData();
-        }else{
-            GetDataDoneList();
-        }
         rcvDone.setLayoutManager(new LinearLayoutManager(getContext()));
         oderAdapter = new OderAdapter(getContext(),list,this);
         rcvDone.setAdapter(oderAdapter);
@@ -132,7 +125,33 @@ public class PaymentFragment extends Fragment implements OderAdapter.Callback{
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    isAdmin = dataSnapshot.child("role").getValue(Boolean.class);
+                    boolean isAdmin = dataSnapshot.child("role").getValue(Boolean.class);
+                    if (isAdmin){
+                        GetAllData();
+                    }else{
+                        GetDataDoneList();
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("Error", "OnCancelled: " + databaseError.getMessage());
+            }
+        });
+    }
+    private void CheckRoleUserFunction(Oder oder){
+        String id = firebaseUser.getUid();
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("user").child(id);
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    boolean isAdmin = dataSnapshot.child("role").getValue(Boolean.class);
+                    if (isAdmin) {
+                        dialogForAdmin(oder);
+                    } else {
+                        dialogForUser(oder);
+                    }
                 }
             }
             @Override
@@ -185,10 +204,6 @@ public class PaymentFragment extends Fragment implements OderAdapter.Callback{
 
     @Override
     public void logic(Oder oder) {
-        if (isAdmin) {
-            dialogForAdmin(oder);
-        } else {
-            dialogForUser(oder);
-        }
+        CheckRoleUserFunction(oder);
     }
 }
