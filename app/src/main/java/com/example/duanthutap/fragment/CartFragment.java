@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -49,6 +51,7 @@ import com.example.duanthutap.model.ProductsAddCart;
 import com.example.duanthutap.model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -57,9 +60,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -78,6 +84,9 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
     private TextView tvPhone;
     private TextView tvLocation;
     private TextView tvShowLocation;
+    private MaterialButton selectColor = null;
+    private Button selectButton = null;
+    private int num;
     RecyclerView recycler_listproductsadd;
     CartAdapter cartAdapter;
     private FirebaseUser firebaseUser;
@@ -170,6 +179,231 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
         });
         AlertDialog alertDialog = aBuilder.create();
         alertDialog.show();
+    }
+
+    @Override
+    public void updateItemCart(ProductsAddCart product) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),R.style.FullScreenDialogTheme);
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View dialogView = inflater.inflate(R.layout.dialog_info_product, null);
+        builder.setView(dialogView);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+        //final ViewPager[] imgFood = {dialog.findViewById(R.id.vpg_slide_product)};
+        TextView tvName = (TextView) dialog.findViewById(R.id.tv_name_product);
+        TextView tvPrice = (TextView) dialog.findViewById(R.id.tv_priceProduct);
+        ImageView  imgMinus = (ImageView) dialog.findViewById(R.id.img_minus);
+        ImageView  imgPlus = (ImageView) dialog.findViewById(R.id.img_plus);
+        final ImageView[] imgPr = {dialog.findViewById(R.id.img_pr)};
+        TextView tvNum = (TextView) dialog.findViewById(R.id.tv_num);
+        MaterialButton btnBrown =  dialog.findViewById(R.id.btn_brown);
+        MaterialButton btnWhite = dialog.findViewById(R.id.btn_white);
+        MaterialButton  btnBlack = dialog.findViewById(R.id.btn_black);
+
+        ImageButton imgback = dialog.findViewById(R.id.img_back);
+        Button   btnXs = (Button) dialog.findViewById(R.id.btn_xs);
+        Button btnS = (Button) dialog.findViewById(R.id.btn_s);
+        Button  btnM = (Button) dialog.findViewById(R.id.btn_m);
+        Button btnXl = (Button) dialog.findViewById(R.id.btn_xl);
+
+
+        TextView tvTotalPrice = (TextView) dialog.findViewById(R.id.tvTotalPrice);
+        TextView tvAddToCart = (TextView) dialog.findViewById(R.id.tvAddToCart);
+        ImageView imgBackToCategory = (ImageView) dialog.findViewById(R.id.img_back);
+
+        String imgUrl = product.getImage_product();
+        Picasso.get().load(imgUrl).into(imgPr[0]);
+
+        tvName.setText(product.getName_product());
+        tvPrice.setText("$ "+product.getPricetotal_product());
+
+        num = product.getNum_product();
+        tvNum.setText(num+"");
+        tvTotalPrice.setText("$ "+num*product.getPricetotal_product());
+
+        String colorPr = product.getColor_product();
+        if (colorPr.equals("Nâu")){
+            btnBrown.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorRed)));
+            selectColor = btnBrown;
+        } else if (colorPr.equals("Trắng")) {
+            btnWhite.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorRed)));
+            selectColor = btnWhite;
+        } else if (colorPr.equals("Đen")) {
+            btnBlack.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorRed)));
+            selectColor = btnBlack;
+        }
+
+        String sizePr = product.getSize_product();
+        if (sizePr.equals("XS")){
+            btnXs.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorRed));
+            selectButton = btnXs;
+        } else if (sizePr.equals("S")) {
+            btnS.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorRed));
+            selectButton = btnS;
+        } else if (sizePr.equals("M")) {
+            btnM.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorRed));
+            selectButton = btnM;
+        } else if (sizePr.equals("XL")) {
+            btnXl.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorRed));
+            selectButton = btnXl;
+        }
+
+        imgBackToCategory.setOnClickListener(view -> {
+            dialog.dismiss();
+        });
+
+        imgMinus.setOnClickListener(view -> {
+            if (num > 1){
+                num--;
+                tvNum.setText(num+"");
+                tvTotalPrice.setText("$ "+num*product.getPricetotal_product());
+            }
+        });
+        imgPlus.setOnClickListener(view -> {
+            DatabaseReference myRef = FirebaseDatabase.getInstance().getReference().child("list_product").child(product.getId_product());
+            myRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    int numPr = snapshot.child("quantity").getValue(Integer.class);
+                    if (num < numPr){
+                        num++;
+                        tvNum.setText(num+"");
+                        tvTotalPrice.setText("$ "+num*product.getPricetotal_product());
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.d("Loi", "onCancelled: "+error.getMessage());
+                }
+            });
+        });
+        btnBrown.setOnClickListener(v->{
+            if (selectColor == btnBrown) {
+                btnBrown.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorNormal)));
+                selectColor = null; // Đặt màu đã chọn về null
+                product.setColor_product(""); // Đặt giá trị màu của sản phẩm về rỗng hoặc giá trị mặc định
+            } else {
+                // Nếu màu nâu không có viền đỏ, đặt viền đỏ cho màu nâu và lưu màu nâu là màu đã chọn
+                if (selectColor != null) {
+                    selectColor.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorNormal)));
+                }
+                btnBrown.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorRed)));
+                selectColor = btnBrown;
+                product.setColor_product("Nâu");
+            }
+        });
+        btnWhite.setOnClickListener(v->{
+            if (selectColor == btnWhite) {
+                btnWhite.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorNormal)));
+                selectColor = null; // Đặt màu đã chọn về null
+                product.setColor_product(""); // Đặt giá trị màu của sản phẩm về rỗng hoặc giá trị mặc định
+            } else {
+                // Nếu màu nâu không có viền đỏ, đặt viền đỏ cho màu nâu và lưu màu nâu là màu đã chọn
+                if (selectColor != null) {
+                    selectColor.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorNormal)));
+                }
+                btnWhite.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorRed)));
+                selectColor = btnWhite;
+                product.setColor_product("Trắng");
+            }
+
+        });
+        btnBlack.setOnClickListener(v->{
+            if (selectColor == btnBlack) {
+                btnBlack.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorNormal)));
+                selectColor = null; // Đặt màu đã chọn về null
+                product.setColor_product(""); // Đặt giá trị màu của sản phẩm về rỗng hoặc giá trị mặc định
+            } else {
+                // Nếu màu nâu không có viền đỏ, đặt viền đỏ cho màu nâu và lưu màu nâu là màu đã chọn
+                if (selectColor != null) {
+                    selectColor.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorNormal)));
+                }
+                btnBlack.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorRed)));
+                selectColor = btnBlack;
+                product.setColor_product("Đen");
+            }
+        });
+
+        btnXs.setOnClickListener(v->{
+            if (selectButton == btnXs) {
+                selectButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
+                selectButton = null; // Đặt màu đã chọn về null
+                product.setSize_product(""); // Đặt giá trị màu của sản phẩm về rỗng hoặc giá trị mặc định
+            } else {
+                if (selectButton != null) {
+                    selectButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
+                }
+                btnXs.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorRed));
+                selectButton = btnXs;
+                product.setSize_product("Xs");
+            }
+        });
+        btnS.setOnClickListener(v->{
+            if (selectButton == btnS) {
+                selectButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
+                selectButton = null; // Đặt màu đã chọn về null
+                product.setSize_product(""); // Đặt giá trị màu của sản phẩm về rỗng hoặc giá trị mặc định
+            } else {
+                if (selectButton != null) {
+                    selectButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
+                }
+                btnS.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorRed));
+                selectButton = btnS;
+                product.setSize_product("S");
+            }
+        });
+        btnM.setOnClickListener(v->{
+            if (selectButton == btnM) {
+                selectButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
+                selectButton = null; // Đặt màu đã chọn về null
+                product.setSize_product(""); // Đặt giá trị màu của sản phẩm về rỗng hoặc giá trị mặc định
+            } else {
+                if (selectButton != null) {
+                    selectButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
+                }
+                btnM.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorRed));
+                selectButton = btnM;
+                product.setSize_product("M");
+            }
+        });
+        btnXl.setOnClickListener(v->{
+            if (selectButton == btnXl) {
+                selectButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
+                selectButton = null; // Đặt màu đã chọn về null
+                product.setSize_product(""); // Đặt giá trị màu của sản phẩm về rỗng hoặc giá trị mặc định
+            } else {
+                if (selectButton != null) {
+                    selectButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
+                }
+                btnXl.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorRed));
+                selectButton = btnXl;
+                product.setSize_product("Xl");
+            }
+        });
+        imgback.setOnClickListener(v->{
+            dialog.dismiss();
+        });
+        tvAddToCart.setBackgroundResource(R.drawable.bg_update_cart);
+        tvAddToCart.setText("Save");
+        tvAddToCart.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        tvAddToCart.setOnClickListener(v1-> {
+            String id_user = firebaseUser.getUid();
+            String color = product.getColor_product();
+            String size = product.getSize_product();
+            int num = Integer.parseInt(tvNum.getText().toString().trim());
+
+            DatabaseReference mReference = FirebaseDatabase.getInstance().getReference().child("cart");
+
+            Map<String, Object> updates = new HashMap<>();
+            updates.put("color_product", color);
+            updates.put("size_product", size);
+            updates.put("num_product", num);
+
+            mReference.child(id_user).child(product.getId()).updateChildren(updates);
+
+            dialog.dismiss();
+        });
     }
 
     private void getListProductAddCart() {
