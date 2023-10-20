@@ -12,6 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.duanthutap.R;
 import com.example.duanthutap.model.Oder;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -45,9 +49,14 @@ public class OderAdapter extends RecyclerView.Adapter<OderAdapter.BillViewHolder
         holder.tvDate.setText(oder.getDate());
         holder.tvStatus.setText(oder.getStatus());
         Picasso.get().load(oder.getImage()).into(holder.imgProduct);
-        holder.imgMenu.setOnClickListener(view -> {
-            callback.logic(oder);
-        });
+        if (oder.getStatus().equals("done")){
+            holder.imgMenu.setVisibility(View.GONE);
+        }else {
+            holder.imgMenu.setOnClickListener(view -> {
+                callback.logic(oder);
+            });
+        }
+
     }
 
     @Override
@@ -79,5 +88,21 @@ public class OderAdapter extends RecyclerView.Adapter<OderAdapter.BillViewHolder
     }
     public interface Callback{
         void logic(Oder oder);
+    }
+    private void deleteOrderCancled(String orderID) {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = firebaseDatabase.getReference("list_oder");
+
+        myRef.child(orderID).removeValue()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                    }
+                });
     }
 }
