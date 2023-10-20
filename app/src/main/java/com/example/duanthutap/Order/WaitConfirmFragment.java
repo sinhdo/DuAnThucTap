@@ -201,7 +201,7 @@ public class WaitConfirmFragment extends Fragment implements OderAdapter.Callbac
             dialog.cancel();
         });
         btnConfirm.setOnClickListener(view -> {
-            oder.setStatus("on_delivery");
+            oder.setStatus("delivery");
             UpdateStatus(oder);
             dialog.dismiss();
         });

@@ -1,5 +1,6 @@
 package com.example.duanthutap.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,7 +62,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHoder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHoder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHoder holder, @SuppressLint("RecyclerView") int position) {
         int index = position;
         User user = list.get(position);
         if (user == null) {
@@ -83,7 +84,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHoder> {
         });
         holder.name.setText("Name :" + user.getName());
         holder.email.setText("Email : " + user.getEmail());
-        holder.phonenumber.setText("Phone : " + user.getPhoneNumber());
+        if (user.getPhoneNumber().isEmpty()||user.getPhoneNumber()==null){
+            holder.phonenumber.setText("Phone : Chưa cập nhật số điện thoại" );
+        }else {
+            holder.phonenumber.setText("Phone : " + user.getPhoneNumber());
+        }
+
+
         holder.deleteUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

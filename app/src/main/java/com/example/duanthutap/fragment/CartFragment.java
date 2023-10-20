@@ -143,7 +143,7 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
             String date = new Date().toString();
             String address = tvLocation.getText().toString();
             String phone_number = tvPhone.getText().toString();
-            String status = "delivery";
+            String status = "pending";
             Oder oder = new Oder(newKey,id_user,name,image,Double.parseDouble(total),date,address,phone_number,status);
             On_Create_Bill(oder);
         });

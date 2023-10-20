@@ -112,7 +112,7 @@ public class DeliveryFragment extends Fragment implements OderAdapter.Callback{
     private void GetAllData() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference myReference = firebaseDatabase.getReference("list_oder");
-        myReference.orderByChild("status").equalTo("on_delivery").addValueEventListener(new ValueEventListener() {
+        myReference.orderByChild("status").equalTo("delivery").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (list != null) {
@@ -138,7 +138,7 @@ public class DeliveryFragment extends Fragment implements OderAdapter.Callback{
         String id_user = firebaseUser.getUid();
         DatabaseReference myReference = firebaseDatabase.getReference("list_oder");
 
-        myReference.orderByChild("status").equalTo("on_delivery").addValueEventListener(new ValueEventListener() {
+        myReference.orderByChild("status").equalTo("delivery").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (list != null) {
@@ -172,10 +172,15 @@ public class DeliveryFragment extends Fragment implements OderAdapter.Callback{
         windowAttributes.gravity = Gravity.BOTTOM;
         Button btnCancel= dialog.findViewById(R.id.btn_cancel);
         Button btnExit= dialog.findViewById(R.id.btn_exit);
-        btnExit.setOnClickListener(view -> {
+        btnCancel.setText("Xác nhận đã nhận được hàng");
+        btnCancel.setOnClickListener(view -> {
+            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference myReference = firebaseDatabase.getReference("list_oder").child(oder.getId());
+            oder.setStatus("done");
+            myReference.child("status").setValue(oder.getStatus());
             dialog.cancel();
         });
-        btnCancel.setOnClickListener(view -> {
+        btnExit.setOnClickListener(view -> {
             dialog.dismiss();
         });
 
@@ -193,11 +198,18 @@ public class DeliveryFragment extends Fragment implements OderAdapter.Callback{
         windowAttributes.gravity = Gravity.BOTTOM;
         Button btnConfirm = (Button) dialog.findViewById(R.id.btn_confirm);
         Button btnExit= dialog.findViewById(R.id.btn_exit);
-        btnExit.setOnClickListener(view -> {
-            dialog.cancel();
+        btnExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              dialog.dismiss();
+            }
         });
         btnConfirm.setOnClickListener(view -> {
-            dialog.dismiss();
+            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference myReference = firebaseDatabase.getReference("list_oder").child(oder.getId());
+            oder.setStatus("done");
+            myReference.child("status").setValue(oder.getStatus());
+            Toast.makeText(getContext(), "Hoàn thành đơn hàng "+oder.getId(), Toast.LENGTH_SHORT).show();
         });
         dialog.show();
     }
