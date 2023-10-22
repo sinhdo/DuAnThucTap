@@ -134,15 +134,17 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
             String date = new Date().toString();
             String address = tvLocation.getText().toString();
             String phone_number = tvPhone.getText().toString();
-            String status = "delivery";
+            String status = "pending";
             Oder oder = new Oder(newKey,id_user,name,image,Double.parseDouble(total),date,address,phone_number,status);
             On_Create_Bill(oder);
+            RemoveAllCart();
         });
     }
     private void On_Create_Bill(Oder oder) {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference myRef = firebaseDatabase.getReference("list_oder");
         String id = oder.getId();
+        String id_user = oder.getId_user();
 
         myRef.child(id).setValue(oder, (error, ref) -> {
            if (error == null){
@@ -153,7 +155,20 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
            }
         });
     }
-
+    private void RemoveAllCart(){
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        String id_user = firebaseUser.getUid();
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference().child("cart").child(id_user);
+        myRef.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
+    }
     private void GetView(View view) {
         btn_pay = view.findViewById(R.id.btn_pay);
         recycler_listproductsadd = view.findViewById(R.id.rcv_cart);
