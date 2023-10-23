@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
+import com.example.duanthutap.ChatBox.ListChatActivity;
 import com.example.duanthutap.R;
 import com.example.duanthutap.activity.ChangePasswordActivity;
 import com.example.duanthutap.activity.InfoLocationActivity;
@@ -46,7 +47,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private FirebaseUser firebaseUser;
     private TextView tvName;
     private TextView tvEmail;
-    private LinearLayout lnlOrder,lnlListUser,lnlchangePass, lnlAddAddress;
+    private LinearLayout lnlOrder,lnlListUser,lnlchangePass, lnlAddAddress,lnlChat;
     private DatabaseReference mReference;
     private ImageView imgAvatarUsers;
     private LinearLayout idInfoUsers;
@@ -87,6 +88,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         lnlAddAddress = (LinearLayout) view.findViewById(R.id.lnl_infoAddress);
 
         lnlListUser =  view.findViewById(R.id.lnl_listUser);
+        lnlChat = view.findViewById(R.id.lnl_chat);
         lnlOrder = (LinearLayout) view.findViewById(R.id.lnl_order);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -116,6 +118,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         idInfoUsers.setOnClickListener(this);
         lnlchangePass.setOnClickListener(this);
         lnlAddAddress.setOnClickListener(this);
+        lnlChat.setOnClickListener(this);
     }
 
     private void setInfoProfile() {
@@ -169,6 +172,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             startActivity(new Intent(getActivity(), ChangePasswordActivity.class));
         } else if (view.getId() == R.id.lnl_infoAddress) {
             startActivity(new Intent(getActivity(), InfoLocationActivity.class));
+        } else if (view.getId()==R.id.lnl_chat) {
+            startActivity(new Intent(getActivity(), ListChatActivity.class));
         }
     }
 
