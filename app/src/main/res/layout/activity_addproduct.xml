@@ -4,117 +4,158 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="15dp">
+    android:background="#FFFFFF">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
+        <ImageButton
+            android:id="@+id/img_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/angle_left"
+            android:background="@color/white"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Thêm sản phẩm"
-            android:textAlignment="center"
-            android:textSize="25sp"
-            android:textColor="#F0F80606"
-            android:layout_marginBottom="25dp"
-            android:textStyle="bold"/>
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:background="#F0D3CFCF"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:hint="Name"
-            app:boxStrokeWidth="0dp">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ed_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:background="#F0D3CFCF"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:hint="Loại"
-            app:boxStrokeWidth="0dp">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ed_category"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-        <ImageView
-            android:id="@+id/img_product"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:clickable="true"
-            android:src="@drawable/camera"/>
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:background="#F0D3CFCF"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:hint="Mô tả"
-            app:boxStrokeWidth="0dp">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ed_des"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:background="#F0D3CFCF"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:hint="Gía"
-            app:boxStrokeWidth="0dp">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ed_price"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:background="#F0D3CFCF"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:hint="Số lượng"
-            app:boxStrokeWidth="0dp">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ed_quantity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16sp" />
-        </com.google.android.material.textfield.TextInputLayout>
+            android:textSize="23sp"
+            android:textColor="@color/colorRed"
+            android:textStyle="bold"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="20dp"
+            android:textAlignment="center"/>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-            <Button
-                android:id="@+id/btn_add"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Add"
-                android:layout_marginRight="30dp"
-                app:cornerRadius="30dp" />
-            <Button
-                android:id="@+id/btn_canel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="canel"
-                app:cornerRadius="30dp" />
-        </LinearLayout>
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="48dp"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/img_product"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="7dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/t_shirt" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Name">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/ed_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_edittext_product"
+                    android:textColor="#0C0B0B" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilColor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="16dp"
+                android:hint="Mô tả">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/ed_des"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_edittext_product"
+                    android:textColor="#0C0B0B" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilQuantity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Quantity">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/ed_quantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_edittext_product"
+                    android:inputType="number"
+                    android:textColor="#0C0B0B" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="16dp"
+                android:hint="Price">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/ed_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_edittext_product"
+                    android:inputType="number"
+                    android:textColor="#0C0B0B" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Category">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/ed_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_edittext_product"
+                    android:textColor="#0C0B0B" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="35dp"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_add"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_btn_update_product"
+                    android:backgroundTint="#181819"
+                    android:text="Thêm"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_canel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_btn_update_product"
+                    android:text="Canel"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.duanthutap.R;
 import com.example.duanthutap.fragment.CartFragment;
@@ -48,9 +49,14 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         holder.tvNameProductCart.setText(products.getName_product());
         holder.tvNumProductCart.setText(products.getNum_product()+"");
         holder.tvPriceProductCart.setText(products.getPricetotal_product()+"");
+        holder.tvColor.setText(products.getColor_product());
+        holder.tvSize.setText(products.getSize_product());
         Picasso.get().load(products.getImage_product()).into(holder.imgProductCart);
         holder.imgDeleteProductCart.setOnClickListener(view -> {
             callback.deleteItemCart(products);
+        });
+        holder.cvLickitem.setOnClickListener(view -> {
+            callback.updateItemCart(products);
         });
     }
 
@@ -64,17 +70,25 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         private TextView tvNameProductCart;
         private TextView tvPriceProductCart;
         private TextView tvNumProductCart;
+        private TextView tvColor;
+        private TextView tvSize;
+        private CardView cvLickitem;
         private ImageView imgDeleteProductCart;
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
+
+            cvLickitem = (CardView) itemView.findViewById(R.id.cv_lickitem);
             imgProductCart = (ImageView) itemView.findViewById(R.id.img_productCart);
             tvNameProductCart = (TextView) itemView.findViewById(R.id.tv_nameProductCart);
             tvPriceProductCart = (TextView) itemView.findViewById(R.id.tv_priceProductCart);
             tvNumProductCart = (TextView) itemView.findViewById(R.id.tv_numProductCart);
             imgDeleteProductCart = (ImageView) itemView.findViewById(R.id.img_deleteProductCart);
+            tvColor = (TextView) itemView.findViewById(R.id.tv_colorProductCart);
+            tvSize = (TextView) itemView.findViewById(R.id.tv_sizeProductCart);
         }
     }
     public interface Callback{
         void deleteItemCart(ProductsAddCart products);
+        void updateItemCart(ProductsAddCart products);
     }
 }

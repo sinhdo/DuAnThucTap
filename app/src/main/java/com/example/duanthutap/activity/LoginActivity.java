@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.example.duanthutap.AdminActivity;
 import com.example.duanthutap.MainActivity;
 import com.example.duanthutap.R;
+import com.example.duanthutap.database.FirebaseRole;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -32,7 +33,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private FirebaseAuth mAuth;
     private TextInputEditText edEmail;
     private TextInputEditText edPass;
-    private TextView tvGoToSignUp;
+    private TextView tvGoToSignUp,tvForgetPass;
 
     private Button btnLogin;
     @SuppressLint("MissingInflatedId")
@@ -41,6 +42,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mAuth = FirebaseAuth.getInstance();
+        tvForgetPass = findViewById(R.id.tv_forgetPass);
 //        if (mAuth.getCurrentUser() != null) {
 //            startActivity(new Intent(LoginAcitivity.this, MainActivity.class));
 //            finish();
@@ -51,6 +53,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         tvGoToSignUp = (TextView) findViewById(R.id.tv_goToSignUp);
         btnLogin.setOnClickListener(this);
         tvGoToSignUp.setOnClickListener(this);
+        tvForgetPass.setOnClickListener(this);
     }
     @Override
     public void onClick(View view) {
@@ -77,16 +80,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             if (task.isSuccessful()) {
                                 // Đăng nhập thành công
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                String uid = user.getUid();
-
-                                // Truy cập cơ sở dữ liệu Firebase Realtime
-                                DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("user").child(uid);
+                                String id = user.getUid();
+                                DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("user").child(id);
                                 userRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         if (dataSnapshot.exists()) {
-                                            boolean isAdmin = dataSnapshot.child("role").getValue(Boolean.class);
-                                            // Xử lý tùy theo giá trị Boolean (true/false)
+                                            boolean isAdmin = FirebaseRole.isUserAdmin(dataSnapshot);
                                             if (isAdmin) {
                                                 // Người dùng là Admin
                                                 startActivity(new Intent(LoginActivity.this, AdminActivity.class));
@@ -111,6 +111,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }else if(view.getId()==R.id.tv_goToSignUp){
             startActivity(new Intent(LoginActivity.this,SignUpActivity.class));
             finishAffinity();
+        } else if (view.getId()==R.id.tv_forgetPass) {
+            startActivity(new Intent(LoginActivity.this,ForgetPasswordActivity.class));
         }
     }
 }

@@ -5,6 +5,8 @@ public class ProductsAddCart {
     private String id_user;
     private String id_product;
     private String name_product;
+    private String color_product;
+    private String size_product;
     private String image_product;
     private int num_product;
     private double pricetotal_product;
@@ -12,11 +14,13 @@ public class ProductsAddCart {
     public ProductsAddCart() {
     }
 
-    public ProductsAddCart(String id, String id_user, String id_product, String name_product, String image_product, int num_product, double pricetotal_product) {
+    public ProductsAddCart(String id, String id_user, String id_product, String name_product,String color_product,String size_product, String image_product, int num_product, double pricetotal_product) {
         this.id = id;
         this.id_user = id_user;
         this.id_product = id_product;
         this.name_product = name_product;
+        this.color_product=color_product;
+        this.size_product=size_product;
         this.image_product = image_product;
         this.num_product = num_product;
         this.pricetotal_product = pricetotal_product;
@@ -76,5 +80,21 @@ public class ProductsAddCart {
 
     public void setPricetotal_product(double pricetotal_product) {
         this.pricetotal_product = pricetotal_product;
+    }
+
+    public String getColor_product() {
+        return color_product;
+    }
+
+    public void setColor_product(String color_product) {
+        this.color_product = color_product;
+    }
+
+    public String getSize_product() {
+        return size_product;
+    }
+
+    public void setSize_product(String size_product) {
+        this.size_product = size_product;
     }
 }

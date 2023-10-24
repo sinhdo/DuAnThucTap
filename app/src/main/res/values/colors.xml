@@ -5,5 +5,11 @@
     <color name="light_blue">#B4BBFD</color>
     <color name="colorNormal">#C6C4C4</color> <!-- Màu nền mặc định -->
     <color name="colorPressed">#4FC6FC</color> <!-- Màu nền khi được bấm -->
+    <color name="colorRed">#FB075A</color>
+    <color name="mauve">#F8F4F4</color>
+    <color name="theme_color">#1B87DD</color>
+    <color name="theme_color_80">#CC2176FF</color>
+    <color name="theme_color_8">#142176FF</color>
+    <color name="light_8">#14000000</color>
 
 </resources>

@@ -9,10 +9,10 @@
             android:id="@+id/ql_product"
             android:icon="@drawable/shopping_bag"
             android:title="Quản lý sản phẩm" />
-        <item
-            android:id="@+id/notification"
-            android:icon="@drawable/baseline_notifications_24"
-            android:title="Thông báo" />
+<!--        <item-->
+<!--            android:id="@+id/notification"-->
+<!--            android:icon="@drawable/baseline_notifications_24"-->
+<!--            android:title="Thông báo" />-->
         <item
             android:id="@+id/ql_user"
             android:icon="@drawable/baseline_perm_identity_24"
