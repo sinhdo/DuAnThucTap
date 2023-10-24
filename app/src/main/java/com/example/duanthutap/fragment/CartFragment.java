@@ -155,6 +155,8 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
            }
         });
     }
+
+    // xoa hang
     private void RemoveAllCart(){
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         String id_user = firebaseUser.getUid();
