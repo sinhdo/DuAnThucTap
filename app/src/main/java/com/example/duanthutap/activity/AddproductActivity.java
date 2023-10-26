@@ -113,7 +113,7 @@ public class AddproductActivity extends AppCompatActivity {
             } else if (selectedImageUrl == null || selectedImageUrl.isEmpty()) {
                 Toast.makeText(AddproductActivity.this, "Vui lòng chọn ảnh sản phẩm", Toast.LENGTH_SHORT).show();
             } else{
-                Product product = new Product(newKey,name,category,des, selectedImageUrl,"","",Double.parseDouble(price),2,Integer.parseInt(quantity));
+                Product product = new Product(newKey,name,category,des, selectedImageUrl,"","",Double.parseDouble(price),0,Integer.parseInt(quantity));
                 onClickAdd(product);
             }
         });

@@ -139,15 +139,12 @@ public class ListUserActivity extends AppCompatActivity implements UserAdapter.C
                     list.add(user);
                 }
                 adapter.notifyDataSetChanged();
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(ListUserActivity.this, "Get Fail !!!", Toast.LENGTH_SHORT).show();
             }
-
-
         });
     }
 
