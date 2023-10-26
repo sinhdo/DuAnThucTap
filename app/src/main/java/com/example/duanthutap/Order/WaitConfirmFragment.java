@@ -33,11 +33,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class WaitConfirmFragment extends Fragment implements OderAdapter.Callback{
+public class WaitConfirmFragment extends Fragment implements OderAdapter.Callback {
 
     public WaitConfirmFragment() {
     }
+
     public static WaitConfirmFragment newInstance() {
         WaitConfirmFragment fragment = new WaitConfirmFragment();
         return fragment;
@@ -54,6 +56,7 @@ public class WaitConfirmFragment extends Fragment implements OderAdapter.Callbac
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_wait_confirm, container, false);
     }
+
     private RecyclerView rcvConfirm;
     private OderAdapter oderAdapter;
     private ArrayList<Oder> list = new ArrayList<>();
@@ -65,7 +68,7 @@ public class WaitConfirmFragment extends Fragment implements OderAdapter.Callbac
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         CheckRoleUser();
         rcvConfirm.setLayoutManager(new LinearLayoutManager(getContext()));
-        oderAdapter = new OderAdapter(getContext(),list,this);
+        oderAdapter = new OderAdapter(getContext(), list, this);
         rcvConfirm.setAdapter(oderAdapter);
     }
 
@@ -92,6 +95,7 @@ public class WaitConfirmFragment extends Fragment implements OderAdapter.Callbac
             }
         });
     }
+
     private void GetDataConfirmList() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         String id_user = firebaseUser.getUid();
@@ -105,7 +109,7 @@ public class WaitConfirmFragment extends Fragment implements OderAdapter.Callbac
                 }
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Oder oder = dataSnapshot.getValue(Oder.class);
-                    if (oder.getId_user().equals(id_user)){
+                    if (oder.getId_user().equals(id_user)) {
                         list.add(oder);
                     }
                 }
@@ -120,7 +124,7 @@ public class WaitConfirmFragment extends Fragment implements OderAdapter.Callbac
         });
     }
 
-    private void CheckRoleUser(){
+    private void CheckRoleUser() {
         String id = firebaseUser.getUid();
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("user").child(id);
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -128,20 +132,22 @@ public class WaitConfirmFragment extends Fragment implements OderAdapter.Callbac
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     boolean isAdmin = Boolean.TRUE.equals(dataSnapshot.child("role").getValue(Boolean.class));
-                    if (isAdmin){
+                    if (isAdmin) {
                         GetAllData();
-                    }else{
+                    } else {
                         GetDataConfirmList();
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.d("Error", "OnCancelled: " + databaseError.getMessage());
             }
         });
     }
-    private void CheckRoleUserFunction(Oder oder){
+
+    private void CheckRoleUserFunction(Oder oder) {
         String id = firebaseUser.getUid();
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("user").child(id);
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -156,6 +162,7 @@ public class WaitConfirmFragment extends Fragment implements OderAdapter.Callbac
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.d("Error", "OnCancelled: " + databaseError.getMessage());
@@ -172,8 +179,8 @@ public class WaitConfirmFragment extends Fragment implements OderAdapter.Callbac
         WindowManager.LayoutParams windowAttributes = window.getAttributes();
         window.setAttributes(windowAttributes);
         windowAttributes.gravity = Gravity.BOTTOM;
-        Button btnCancel= dialog.findViewById(R.id.btn_cancel);
-        Button btnExit= dialog.findViewById(R.id.btn_exit);
+        Button btnCancel = dialog.findViewById(R.id.btn_cancel);
+        Button btnExit = dialog.findViewById(R.id.btn_exit);
         btnExit.setOnClickListener(view -> {
             dialog.cancel();
         });
@@ -196,19 +203,21 @@ public class WaitConfirmFragment extends Fragment implements OderAdapter.Callbac
         window.setAttributes(windowAttributes);
         windowAttributes.gravity = Gravity.BOTTOM;
         Button btnConfirm = (Button) dialog.findViewById(R.id.btn_confirm);
-        Button btnExit= dialog.findViewById(R.id.btn_exit);
+        Button btnExit = dialog.findViewById(R.id.btn_exit);
         btnExit.setOnClickListener(view -> {
             dialog.cancel();
         });
         btnConfirm.setOnClickListener(view -> {
             oder.setStatus("delivery");
+            GetNameProduct(oder.getId());
             UpdateStatus(oder);
+
             dialog.dismiss();
         });
         dialog.show();
     }
 
-    private void UpdateStatus(Oder oder){
+    private void UpdateStatus(Oder oder) {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference myRef = firebaseDatabase.getReference("list_oder");
         String id = oder.getId();
@@ -224,8 +233,85 @@ public class WaitConfirmFragment extends Fragment implements OderAdapter.Callbac
         });
     }
 
+
     @Override
     public void logic(Oder oder) {
         CheckRoleUserFunction(oder);
+    }
+
+    private void GetNameProduct(String abc) {
+        DatabaseReference orderRef = FirebaseDatabase.getInstance().getReference("list_oder");
+
+        orderRef.orderByChild(abc).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot orderSnapshot : dataSnapshot.getChildren()) {
+                    String orderId = orderSnapshot.child("id").getValue(String.class);
+                    if (orderId.equals(abc)) {
+                        String id_user = orderSnapshot.child("id_user").getValue(String.class);
+                        DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference("cart").child(id_user);
+                        cartRef.orderByChild("id_user").equalTo(id_user).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.exists()) {
+                                    for (DataSnapshot cartSnapshot : snapshot.getChildren()) {
+                                        String id_cart = cartSnapshot.getKey();
+                                        String id_Product = cartSnapshot.child("id_product").getValue(String.class);
+                                        int num_product = cartSnapshot.child("num_product").getValue(Integer.class);
+                                        Log.d("======", "num_product: "+num_product+"id pro "+id_Product);
+                                        DatabaseReference productRef = FirebaseDatabase.getInstance().getReference("list_product");
+                                        productRef.orderByChild("id").equalTo(id_Product).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot Prosnapshot) {
+                                                if (Prosnapshot.exists()) {
+                                                  for (DataSnapshot productSanpshot: Prosnapshot.getChildren()){
+                                                      DatabaseReference protRef = FirebaseDatabase.getInstance().getReference("list_product").child(id_Product);
+                                                      Product product = productSanpshot.getValue(Product.class);
+                                                      if (product!=null){
+                                                          int sold = product.getSold();
+                                                          int quantity = product.getQuantity();
+                                                          String name = product.getName();
+                                                          Log.d("========", "sold: " + sold + " quan " + quantity+" name "+name);
+                                                    product.setSold(sold + num_product);
+                                                    product.setQuantity(quantity - num_product);
+                                                          protRef.child("sold").setValue(product.getSold());
+                                                          protRef.child("quantity").setValue(product.getQuantity());
+                                                      }else {
+                                                          Log.d("======", "onDataChange: Product NUll");
+                                                      }
+
+                                                  }
+
+                                                } else {
+                                                    Log.d("=====", "Không vào: " + Prosnapshot);
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
+                                    }
+                                } else {
+                                    Toast.makeText(getContext(), "Không tìm thấy giỏ hàng", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Log.d("======", "onCancelled: " + error.getMessage());
+                            }
+                        });
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("=====", "onCancelled: " + databaseError.getMessage());
+            }
+        });
     }
 }

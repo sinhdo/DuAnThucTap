@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.duanthutap.R;
 import com.example.duanthutap.database.FirebaseRole;
 import com.example.duanthutap.model.Oder;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,12 +24,12 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.NotifyViewHolder>{
+public class NotificationAdapterForAdmin extends RecyclerView.Adapter<NotificationAdapterForAdmin.NotifyViewHolder>{
     private Context context;
     private List<Oder> list;
     private FirebaseUser firebaseUser;
 
-    public NotificationAdapter(Context context, List<Oder> list) {
+    public NotificationAdapterForAdmin(Context context, List<Oder> list) {
         this.context = context;
         this.list = list;
     }
@@ -52,16 +49,16 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         }
         if (oder.getStatus().equals("delivery")){
             Picasso.get().load(oder.getImage()).into(holder.imgProduct);
-            holder.tvNotification.setText("Đơn hàng mã "+oder.getId()+" của bạn đã được xác nhận. Vui lòng nhấn xác nhận đã nhận hàng khi nhận được hàng \n" +"Cảm ơn quý khách !!!");
+            holder.tvNotification.setText("Đơn hàng mã "+oder.getId()+" đã được xác nhận. Đang tiến hành giao hàng !!!" );
         } else if (oder.getStatus().equals("done")) {
             Picasso.get().load(oder.getImage()).into(holder.imgProduct);
-            holder.tvNotification.setText("Đơn hàng mã "+oder.getId()+" đã được giao thành công \n" +"Cảm ơn quý khách đã mua hàng tại EasyShop!!!");
+            holder.tvNotification.setText("Đơn hàng mã "+oder.getId()+" đã được giao thành công ");
         }else if (oder.getStatus().equals("canceled")){
             Picasso.get().load(oder.getImage()).into(holder.imgProduct);
-            holder.tvNotification.setText("Đơn hàng mã "+oder.getId()+" đã được huỷ thành công !!!");
+            holder.tvNotification.setText("Đơn hàng mã "+oder.getId()+" đã bị huỷ");
         }else if (oder.getStatus().equals("pending")) {
             Picasso.get().load(oder.getImage()).into(holder.imgProduct);
-            holder.tvNotification.setText("Đơn hàng mã " + oder.getId() + " đã được được đặt. Vui lòng đợi admin xác nhận !!!");
+            holder.tvNotification.setText("Đơn hàng mã " + oder.getId() + " cần được xác nhận !!!");
         }
 
     }
@@ -103,24 +100,5 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             }
         });
     }
-    private void getRole(){
-        String id = firebaseUser.getUid();
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("user").child(id);
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                boolean isAdmin = FirebaseRole.isUserAdmin(dataSnapshot);
-                if (isAdmin) {
 
-                } else {
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("Loi", "onCancelled: " + databaseError.getMessage());
-            }
-        });
-    }
 }

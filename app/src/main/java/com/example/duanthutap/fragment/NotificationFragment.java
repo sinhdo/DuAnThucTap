@@ -16,7 +16,9 @@ import android.widget.Toast;
 
 import com.example.duanthutap.R;
 import com.example.duanthutap.adapter.NotificationAdapter;
+import com.example.duanthutap.adapter.NotificationAdapterForAdmin;
 import com.example.duanthutap.adapter.OderAdapter;
+import com.example.duanthutap.database.FirebaseRole;
 import com.example.duanthutap.model.Oder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,6 +37,7 @@ import java.util.Collections;
 public class NotificationFragment extends Fragment {
     RecyclerView recyclerView;
     private NotificationAdapter adapter;
+    private NotificationAdapterForAdmin adapterForAdmin;
     private ArrayList<Oder> list = new ArrayList<>();
     private FirebaseUser firebaseUser;
 
@@ -69,11 +72,10 @@ public class NotificationFragment extends Fragment {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
-        getNotification();
-        adapter = new NotificationAdapter(getContext(),list);
-        recyclerView.setAdapter(adapter);
+        getRole();
     }
-    private void getNotification(){
+
+    private void getNotificationForUser() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         String id_user = firebaseUser.getUid();
         DatabaseReference myReference = firebaseDatabase.getReference("list_oder");
@@ -86,11 +88,10 @@ public class NotificationFragment extends Fragment {
                 }
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Oder oder = dataSnapshot.getValue(Oder.class);
-                    if (oder.getId_user().equals(id_user)){
-                        list.add(0,oder);
+                    if (oder.getId_user().equals(id_user)) {
+                        list.add(0, oder);
                     }
                 }
-//                Collections.reverse(list);
                 adapter.notifyDataSetChanged();
             }
 
@@ -106,13 +107,14 @@ public class NotificationFragment extends Fragment {
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
             }
+
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 Oder updatedItem = snapshot.getValue(Oder.class);
                 int index = -1;
                 for (int i = 0; i < list.size(); i++) {
                     if (list.get(i).getId().equals(updatedItem.getId())) {
-                        if (updatedItem.getId_user().equals(id_user)){
+                        if (updatedItem.getId_user().equals(id_user)) {
                             index = i;
                             break;
                         }
@@ -123,7 +125,7 @@ public class NotificationFragment extends Fragment {
                     list.set(index, updatedItem);
                     adapter.notifyItemChanged(index);
                 }
-                Log.d("===========", "onChildChanged: "+index);
+                Log.d("===========", "onChildChanged: " + index);
             }
 
             @Override
@@ -142,6 +144,99 @@ public class NotificationFragment extends Fragment {
             }
         });
 
+    }
+    private void getNotificationForAdmin() {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        String id_user = firebaseUser.getUid();
+        DatabaseReference myReference = firebaseDatabase.getReference("list_oder");
+
+        myReference.orderByChild("status").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (list != null) {
+                    list.clear();
+                }
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Oder oder = dataSnapshot.getValue(Oder.class);
+                        list.add(0, oder);
+                }
+                adapterForAdmin.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(), "Get list users failed", Toast.LENGTH_SHORT).show();
+                Log.d("LIST-CART", "onCancelled: " + error.getMessage());
+            }
+
+        });
+        myReference.orderByChild("status").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Oder updatedItem = snapshot.getValue(Oder.class);
+                int index = -1;
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.get(i).getId().equals(updatedItem.getId())) {
+                        if (updatedItem.getId_user().equals(id_user)) {
+                            index = i;
+                            break;
+                        }
+
+                    }
+                }
+                if (index != -1) {
+                    list.set(index, updatedItem);
+                    adapterForAdmin.notifyItemChanged(index);
+                }
+                Log.d("===========", "onChildChanged: " + index);
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    private void getRole() {
+        String id = firebaseUser.getUid();
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("user").child(id);
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                boolean isAdmin = FirebaseRole.isUserAdmin(dataSnapshot);
+                if (isAdmin) {
+                    adapterForAdmin = new NotificationAdapterForAdmin(getContext(), list);
+                    recyclerView.setAdapter(adapterForAdmin);
+                    getNotificationForAdmin();
+                } else {
+                    adapter = new NotificationAdapter(getContext(), list);
+                    recyclerView.setAdapter(adapter);
+                    getNotificationForUser();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("Loi", "onCancelled: " + databaseError.getMessage());
+            }
+        });
     }
 
 }

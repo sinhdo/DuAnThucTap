@@ -36,7 +36,9 @@ public class AdminActivity extends AppCompatActivity {
                 replaceFragment(new CategoryFragment());
             } else if (id == R.id.ql_user) {
                 replaceFragment(new ProfileFragment());
-            }else {
+            } else if (id==R.id.notification) {
+                replaceFragment(new NotificationFragment());
+            } else {
                 replaceFragment(new HomeFragment());
             }
             return true;

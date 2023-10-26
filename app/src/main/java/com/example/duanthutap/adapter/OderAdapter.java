@@ -89,20 +89,5 @@ public class OderAdapter extends RecyclerView.Adapter<OderAdapter.BillViewHolder
     public interface Callback{
         void logic(Oder oder);
     }
-    private void deleteOrderCancled(String orderID) {
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = firebaseDatabase.getReference("list_oder");
 
-        myRef.child(orderID).removeValue()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                    }
-                });
-    }
 }
