@@ -65,11 +65,10 @@ public class HomeFragment extends Fragment {
         rcvListitem = (RecyclerView) view.findViewById(R.id.rcv_listitem);
 
         List<Integer> imageList = new ArrayList<>();
-        imageList.add(R.drawable.fist);
-        imageList.add(R.drawable.seco);
-        imageList.add(R.drawable.third);
-        imageList.add(R.drawable.ford);
-        imageList.add(R.drawable.five);
+        imageList.add(R.drawable.banner1);
+        imageList.add(R.drawable.banner2);
+        imageList.add(R.drawable.banner3);
+        imageList.add(R.drawable.banner4);
 
 
         SliderAdapter sliderAdapter = new SliderAdapter(getActivity(), imageList);
