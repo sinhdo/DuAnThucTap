@@ -2,10 +2,14 @@ package com.example.duanthutap.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,10 +17,12 @@ import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 
+import com.example.duanthutap.MainActivity;
 import com.example.duanthutap.R;
 import com.example.duanthutap.adapter.LocationAdapter;
 import com.example.duanthutap.adapter.ShowLocationAdapter;
 import com.example.duanthutap.databinding.ActivityShowListLocationBinding;
+import com.example.duanthutap.fragment.CartFragment;
 import com.example.duanthutap.model.Location;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,6 +48,9 @@ public class ShowListLocationActivity extends AppCompatActivity implements ShowL
 
         binding.rcvShowListLocation.setLayoutManager(new LinearLayoutManager(this));
         showList();
+        binding.imgBack.setOnClickListener(view -> {
+            finish();
+        });
     }
     private void showList(){
         getListLocation();
@@ -76,12 +85,15 @@ public class ShowListLocationActivity extends AppCompatActivity implements ShowL
 
     @Override
     public void clickItem(Location location) {
-        SharedPreferences sharedPreferences = getSharedPreferences("PrefLocation", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("name", location.getName());
-        editor.putString("phone", location.getPhone());
-        editor.putString("location", location.getLocation());
-        editor.apply();
+        Intent intent = new Intent(ShowListLocationActivity.this, MainActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("nameLocation",location.getName());
+        bundle.putString("phoneLocation",location.getPhone());
+        bundle.putString("location",location.getLocation());
+
+        intent.putExtras(bundle);
+        setResult(Activity.RESULT_OK, intent);
+
         finish();
     }
 }

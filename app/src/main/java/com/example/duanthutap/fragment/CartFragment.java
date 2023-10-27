@@ -128,9 +128,13 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
         recycler_listproductsadd.setAdapter(cartAdapter);
         poppuGetListPayment();
         sumPriceProduct();
-        setLocation();
+//        setLocation();
         rlAddress.setOnClickListener(view1 -> {
-            startActivity(new Intent(getActivity(), ShowListLocationActivity.class));
+            Intent intent = new Intent(getActivity(), ShowListLocationActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("key", "value");
+            intent.putExtras(bundle);
+            startActivityForResult(intent, Activity.RESULT_CANCELED);
         });
         btn_pay.setOnClickListener(view1 -> {
             FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
@@ -538,21 +542,46 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
         return totalPrice;
     }
 
-    private void setLocation(){
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("PrefLocation", Context.MODE_PRIVATE);
-        String name = sharedPreferences.getString("name", "");
-        String phone = sharedPreferences.getString("phone", "");
-        String location = sharedPreferences.getString("location", "");
+//    private void setLocation(){
+//        Bundle bundle = getArguments();
+//
+//        if (bundle == null){
+//            lnlShowLocation.setVisibility(View.GONE);
+//            tvShowLocation.setVisibility(View.VISIBLE);
+//            Log.d("GGGGGGG", "setLocation: ");
+//        } else {
+//            lnlShowLocation.setVisibility(View.VISIBLE);
+//            tvShowLocation.setVisibility(View.GONE);
+//            String name = bundle.getString("nameLocation");
+//            Log.d("HHHHHHHHHHH", "setLocation: "+name);
+//            String phone = bundle.getString("phoneLocation");
+//            String location = bundle.getString("location");
+//            tvName.setText(name);
+//            tvPhone.setText(phone);
+//            tvLocation.setText(location);
+//        }
+//    }
 
-        if (name.isEmpty()){
-            lnlShowLocation.setVisibility(View.GONE);
-            tvShowLocation.setVisibility(View.VISIBLE);
-        } else {
-            lnlShowLocation.setVisibility(View.VISIBLE);
-            tvShowLocation.setVisibility(View.GONE);
-            tvName.setText(name);
-            tvPhone.setText(phone);
-            tvLocation.setText(location);
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK){
+            Bundle bundle = data.getExtras();
+            if (bundle == null){
+                lnlShowLocation.setVisibility(View.GONE);
+                tvShowLocation.setVisibility(View.VISIBLE);
+                Log.d("GGGGGGG", "setLocation: ");
+            } else {
+                lnlShowLocation.setVisibility(View.VISIBLE);
+                tvShowLocation.setVisibility(View.GONE);
+                String name = bundle.getString("nameLocation");
+                Log.d("HHHHHHHHHHH", "setLocation: "+name);
+                String phone = bundle.getString("phoneLocation");
+                String location = bundle.getString("location");
+                tvName.setText(name);
+                tvPhone.setText(phone);
+                tvLocation.setText(location);
+            }
         }
     }
 
@@ -560,6 +589,6 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
     public void onResume() {
         super.onResume();
         sumPriceProduct();
-        setLocation();
+//        setLocation();
     }
 }

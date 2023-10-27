@@ -26,13 +26,28 @@
             android:name=".Order.OrderActivity"
             android:exported="false" />
         <activity
+            android:name=".activity.AddLocationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ChangePasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.InfoLocationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ForgetPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.UpdateProductActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.VoucherActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.InfoUserActivity"
             android:exported="false" />
-<!--       <activity-->
-<!--            android:name=".activity.ListUserActivity"-->
-<!--            android:exported="false" />-->
-        <activity
-            android:name=".Order.OrderActivity"
+       <activity
+            android:name=".activity.ShowListLocationActivity"
             android:exported="false" />
         <activity
             android:name=".activity.AddproductActivity"
@@ -57,10 +72,6 @@
             android:name=".activity.LoginActivity"
             android:exported="true" >
         </activity>
-        <activity
-
-            android:name=".activity.ChiTietSanPhamActivity"
-            android:exported="false" />
         <activity
             android:name=".activity.SignUpActivity"
             android:exported="true">
