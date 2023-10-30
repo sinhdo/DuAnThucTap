@@ -456,22 +456,18 @@ public class CategoryFragment extends Fragment implements ProductAdapter.Callbac
             double price = product.getPrice();
             int num = Integer.parseInt(tvNum.getText().toString().trim());
 
-
-            mReference = FirebaseDatabase.getInstance().getReference().child("cart");
-            String newKey = mReference.push().getKey();
-            ProductsAddCart product1 = new ProductsAddCart(newKey, id_user, id_product, name,color,size,img, num, price);
-            mReference.child(id_user).child(newKey).setValue(product1);
-
-//            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//            fragmentTransaction.replace(R.id.frame_layoutMain, new CartFragment());
-//            fragmentTransaction.addToBackStack(null);
-//            fragmentTransaction.commit();
-//
-//            BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottomNavigationView);
-//            bottomNavigationView.setSelectedItemId(R.id.cart);
-            Toast.makeText(getContext(), "Thêm vào giỏ hàng thành công", Toast.LENGTH_SHORT).show();
-            dialog.dismiss();
+            if ( color == null || size == null){
+                Toast.makeText(getActivity(), "Lựa chọn đầy đủ thông tni sản phẩm!", Toast.LENGTH_SHORT).show();
+            } else if (color.equals("") || size.equals("")) {
+                Toast.makeText(getActivity(), "Lựa chọn đầy đủ thông tni sản phẩm!", Toast.LENGTH_SHORT).show();
+            } else {
+                mReference = FirebaseDatabase.getInstance().getReference().child("cart");
+                String newKey = mReference.push().getKey();
+                ProductsAddCart product1 = new ProductsAddCart(newKey, id_user, id_product, name,color,size,img, num, price);
+                mReference.child(id_user).child(newKey).setValue(product1);
+                Toast.makeText(getContext(), "Thêm vào giỏ hàng thành công", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
         });
     }
     public void setRoleAdd() {
