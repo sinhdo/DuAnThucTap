@@ -63,6 +63,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Date;
@@ -96,6 +97,7 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
     private ProductsAddCart product;
     private int tax = 5;
     private ArrayList<ProductsAddCart> list = new ArrayList<>();
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public CartFragment() {
         // Required empty public constructor
@@ -144,7 +146,7 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
             String name = product.getName_product();
             String image = product.getImage_product();
             String total = totalPriceCart.getText().toString();
-            String date = new Date().toString();
+            String date = dateFormat.format(new Date());
             String address = tvLocation.getText().toString();
             String phone_number = tvPhone.getText().toString();
             String status = "pending";

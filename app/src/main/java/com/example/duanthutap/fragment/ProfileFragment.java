@@ -26,6 +26,7 @@ import com.example.duanthutap.activity.InfoLocationActivity;
 import com.example.duanthutap.activity.InfoUserActivity;
 import com.example.duanthutap.activity.ListUserActivity;
 import com.example.duanthutap.activity.LoginActivity;
+import com.example.duanthutap.activity.StatisticalActivity;
 import com.example.duanthutap.database.FirebaseRole;
 
 
@@ -53,6 +54,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private LinearLayout idInfoUsers;
     private Picasso picasso = Picasso.get();
     private FirebaseAuth mAuth;
+    private LinearLayout lnlStatical;
 
 
     public ProfileFragment() {
@@ -86,6 +88,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         lnlchangePass = view.findViewById(R.id.lnl_changePass);
         idInfoUsers = (LinearLayout) view.findViewById(R.id.id_infoUsers);
         lnlAddAddress = (LinearLayout) view.findViewById(R.id.lnl_infoAddress);
+        lnlStatical = (LinearLayout) view.findViewById(R.id.lnl_statical);
 
         lnlListUser =  view.findViewById(R.id.lnl_listUser);
         lnlChat = view.findViewById(R.id.lnl_chat);
@@ -119,6 +122,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         lnlchangePass.setOnClickListener(this);
         lnlAddAddress.setOnClickListener(this);
         lnlChat.setOnClickListener(this);
+        lnlStatical.setOnClickListener(this);
     }
 
     private void setInfoProfile() {
@@ -174,6 +178,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             startActivity(new Intent(getActivity(), InfoLocationActivity.class));
         } else if (view.getId()==R.id.lnl_chat) {
             startActivity(new Intent(getActivity(), ListChatActivity.class));
+        }else if (view.getId()==R.id.lnl_statical) {
+            startActivity(new Intent(getActivity(), StatisticalActivity.class));
         }
     }
 
@@ -192,6 +198,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                     if (isAdmin) {
                         // Người dùng là Admin
                         lnlListUser.setVisibility(View.VISIBLE);
+                        lnlStatical.setVisibility(View.VISIBLE);
                     } else {
                         // Người dùng không phải là Admin
                         lnlListUser.setVisibility(View.GONE);
