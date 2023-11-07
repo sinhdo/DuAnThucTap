@@ -61,6 +61,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.imgProduct.setOnClickListener(v->{
                 callback.itemProductInfo(product);
         });
+        holder.tvSold.setText(product.getSold()+"");
     }
 
 
@@ -77,13 +78,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         private TextView tvName;
         private TextView tvPrice;
         private TextView tvQuantity;
-
+        private TextView tvSold;
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             imgProduct = (ImageView) itemView.findViewById(R.id.img_product);
             tvName = (TextView) itemView.findViewById(R.id.tv_name);
             tvPrice = (TextView) itemView.findViewById(R.id.tv_price);
             tvQuantity = (TextView) itemView.findViewById(R.id.tv_quantity);
+            tvSold = (TextView) itemView.findViewById(R.id.tv_sold);
         }
     }
 
