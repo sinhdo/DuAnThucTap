@@ -6,14 +6,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.duanthutap.MainActivity;
 import com.example.duanthutap.R;
 import com.example.duanthutap.adapter.VoucherAdapter;
 import com.example.duanthutap.databinding.ActivityVoucherBinding;
+import com.example.duanthutap.fragment.CartFragment;
 import com.example.duanthutap.model.Product;
 import com.example.duanthutap.model.ProductsAddCart;
 import com.example.duanthutap.model.Voucher;
@@ -31,9 +36,11 @@ public class VoucherActivity extends AppCompatActivity {
     ActivityVoucherBinding binding;
     VoucherAdapter adapter;
     VoucherAdapter adapterFreeShip;
+    ImageView arrow_ios_back;
     List<Voucher> v;
     List<Voucher> vFreeShip;
     FirebaseDatabase firebaseDatabase;
+    Voucher voucher_select;
     DatabaseReference myRef;
 
     @Override
@@ -45,7 +52,7 @@ public class VoucherActivity extends AppCompatActivity {
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         myRef = firebaseDatabase.getReference("voucher");
-
+        arrow_ios_back = findViewById(R.id.arrow_ios_back);
         v = new ArrayList<>();
         vFreeShip = new ArrayList<>();
 
@@ -63,7 +70,7 @@ public class VoucherActivity extends AppCompatActivity {
         adapter = new VoucherAdapter(v, new VoucherAdapter.onItemClick() {
             @Override
             public void onItemSelected(Voucher voucher) {
-
+                voucher_select = voucher;
             }
         });
         binding.voucherMagiam.setAdapter(adapter);
@@ -71,10 +78,20 @@ public class VoucherActivity extends AppCompatActivity {
         adapterFreeShip = new VoucherAdapter(vFreeShip, new VoucherAdapter.onItemClick() {
             @Override
             public void onItemSelected(Voucher voucher) {
-
+                voucher_select = voucher;
             }
         });
         binding.voucherFreeship.setAdapter(adapterFreeShip);
+
+        arrow_ios_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(VoucherActivity.this, MainActivity.class);
+                intent.putExtra("Voucher",voucher_select);
+                setResult(CartFragment.RESET_CODE,intent);
+                finish();
+            }
+        });
 
     }
     private List<Voucher> getVoucher(){

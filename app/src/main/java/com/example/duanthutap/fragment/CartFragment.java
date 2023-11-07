@@ -43,6 +43,7 @@ import com.example.duanthutap.MainActivity;
 import com.example.duanthutap.R;
 import com.example.duanthutap.activity.AddproductActivity;
 import com.example.duanthutap.activity.ShowListLocationActivity;
+import com.example.duanthutap.activity.VoucherActivity;
 import com.example.duanthutap.adapter.CartAdapter;
 import com.example.duanthutap.adapter.ProductAdapter;
 import com.example.duanthutap.model.Location;
@@ -50,6 +51,7 @@ import com.example.duanthutap.model.Oder;
 import com.example.duanthutap.model.Product;
 import com.example.duanthutap.model.ProductsAddCart;
 import com.example.duanthutap.model.User;
+import com.example.duanthutap.model.Voucher;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
@@ -85,7 +87,7 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
     private LinearLayout lnlShowLocation;
     private TextView tvName;
     private TextView tvPhone;
-    private TextView tvLocation;
+    private TextView tvLocation,tvCouponCost;
     private TextView tvShowLocation;
     private MaterialButton selectColor = null;
     private Button selectButton = null;
@@ -98,6 +100,8 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
     private int tax = 5;
     private ArrayList<ProductsAddCart> list = new ArrayList<>();
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    public final  static  int RESET_CODE  =123;
+    Voucher voucher = null;
 
     public CartFragment() {
         // Required empty public constructor
@@ -154,6 +158,13 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
             On_Create_Bill(oder);
             RemoveAllCart();
         });
+        tvCouponCost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), VoucherActivity.class);
+                startActivityForResult(intent,RESET_CODE);
+            }
+        });
     }
     private void On_Create_Bill(Oder oder) {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
@@ -185,6 +196,8 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
             public void onFailure(@NonNull Exception e) {
             }
         });
+
+
     }
     private void GetView(View view) {
         btn_pay = view.findViewById(R.id.btn_pay);
@@ -199,6 +212,7 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
         tvPhone = (TextView) view.findViewById(R.id.tv_phone);
         tvLocation = (TextView) view.findViewById(R.id.tv_location);
         tvShowLocation = (TextView) view.findViewById(R.id.tv_showLocation);
+        tvCouponCost =  (TextView) view.findViewById(R.id. tvCouponCost);
     }
 
     @Override
@@ -503,11 +517,21 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
                 if (list.size() == 0) {
                     return;
                 } else {
-                    double totalAllProduct = caculatorTotalPrice(list);
-                    double totalCart = totalAllProduct + tax;
-                    totalPriceItem.setText("$ " + totalAllProduct);
-                    totalPriceCart.setText(String.valueOf(totalCart));
-                    taxPrice.setText("$ " + tax);
+
+                    if(voucher !=  null){
+                        double totalAllProduct = caculatorTotalPrice(list);
+                        double totalCart = (totalAllProduct + tax) - ((totalAllProduct + tax)*0.1);
+                        totalPriceItem.setText("$ " + totalAllProduct);
+                        totalPriceCart.setText(String.valueOf(totalCart));
+                        taxPrice.setText("$ " + tax);
+                    }else{
+                        double totalAllProduct = caculatorTotalPrice(list);
+                        double totalCart = totalAllProduct + tax;
+                        totalPriceItem.setText("$ " + totalAllProduct);
+                        totalPriceCart.setText(String.valueOf(totalCart));
+                        taxPrice.setText("$ " + tax);
+                    }
+
                 }
             }
             @Override
@@ -584,6 +608,11 @@ public class CartFragment extends Fragment implements CartAdapter.Callback {
                 tvPhone.setText(phone);
                 tvLocation.setText(location);
             }
+        }
+
+        if(resultCode == RESET_CODE){
+            Bundle bundle = data.getExtras();
+            voucher = (Voucher) bundle.getSerializable("Voucher");
         }
     }
 

@@ -1,6 +1,8 @@
 package com.example.duanthutap.model;
 
-public class Voucher {
+import java.io.Serializable;
+
+public class Voucher implements Serializable {
     private String id;
     private String type;
     private String name;
