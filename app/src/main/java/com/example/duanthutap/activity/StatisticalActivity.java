@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ public class StatisticalActivity extends AppCompatActivity implements StaticalAd
     private TextInputEditText edEndDate;
     private ImageView imgEndDate;
     private ImageView imgDoanhThu;
+    private ImageButton imgBack;
     private TextView tvDoanhThu;
     StaticalAdapter staticalAdapter;
 
@@ -71,8 +73,12 @@ public class StatisticalActivity extends AppCompatActivity implements StaticalAd
             String end = edEndDate.getText().toString();
             staticalAdapter.calculateRevenue(start, end, this);
         });
+        imgBack.setOnClickListener(view -> {
+            finish();
+        });
     }
     void init(){
+        imgBack = (ImageButton) findViewById(R.id.img_back);
         edStartDate = findViewById(R.id.ed_start_date);
         imgStartDate = findViewById(R.id.img_start_date);
         edEndDate = findViewById(R.id.ed_end_date);
@@ -88,7 +94,7 @@ public class StatisticalActivity extends AppCompatActivity implements StaticalAd
 
     @Override
     public void onCalculated(double revenue) {
-        tvDoanhThu.setText(""+revenue);
+        tvDoanhThu.setText(""+revenue+" $");
     }
 
     @Override

@@ -34,7 +34,8 @@
         android:layout_marginEnd="35sp"
         android:hint="Email"
         android:textColorHint="#AAA6A6"
-        android:background="#FFFFFF">
+        android:background="#FFFFFF"
+        android:layout_marginTop="15sp">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/ed_email"
             android:layout_width="match_parent"
