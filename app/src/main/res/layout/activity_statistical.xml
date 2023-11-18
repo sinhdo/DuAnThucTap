@@ -5,9 +5,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center_horizontal"
-    android:paddingTop="100dp">
-
+    android:gravity="center_horizontal">
+    <LinearLayout
+        android:id="@+id/lnl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="20dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:layout_marginBottom="50dp">
+        <ImageButton
+            android:id="@+id/img_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/angle_left"
+            android:background="@color/white"
+            android:layout_marginTop="10dp"/>
+        <TextView
+            android:layout_marginLeft="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Địa chỉ giao hàng"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
+    </LinearLayout>
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -81,4 +104,5 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </LinearLayout>
+
 </LinearLayout>

@@ -83,8 +83,12 @@
                         android:layout_height="wrap_content"
                         android:text="đỏ"
                         android:textSize="17sp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
                     <TextView
-                        android:layout_marginLeft="40dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Status: "
